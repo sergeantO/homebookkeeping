@@ -12,6 +12,7 @@ import { authLimiter } from './middlewares/rateLimiter';
 import routes from './routes/v1';
 import { errorConverter, errorHandler } from './middlewares/error';
 import ApiError from './utils/ApiError';
+import path from 'path';
 
 const app = express();
 
@@ -19,12 +20,6 @@ if (config.env !== 'test') {
   app.use(morgan.successHandler);
   app.use(morgan.errorHandler);
 }
-
-const distPath = (config.env === 'production') 
-    ? '/../../../client/dist' 
-    : '/../../client/dist'
-
-app.use(express.static(__dirname + distPath));
 
 // set security HTTP headers
 app.use(helmet());
@@ -58,8 +53,18 @@ if (config.env === 'production') {
 app.use('/v1', routes);
 
 // send back a 404 error for any unknown api request
-app.use((req, res, next) => {
+app.use('/v1', (req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
+});
+
+const distPath = (config.env === 'production') 
+    ? path.resolve(__dirname, '..', '..', '..', 'client', 'dist')
+    : path.resolve(__dirname, '..', '..', 'client', 'dist')
+    
+// send static
+app.use(express.static(distPath));
+app.get('*', function (req, res) {
+  res.sendFile(path.resolve(distPath, 'index.html'));
 });
 
 // convert error to ApiError, if needed

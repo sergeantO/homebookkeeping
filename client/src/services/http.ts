@@ -1,6 +1,8 @@
 import axios, { type AxiosRequestConfig } from "axios";
 
-export const API_URL = "http://194.67.67.148/v1" // "http://127.0.0.1:3000/v1"
+// "http://localhost:3000/v1"
+// "http://194.67.67.148/v1"
+export const API_URL = "http://194.67.67.148/v1"
 
 export const $http = axios.create({
     // withCredentials: true,
