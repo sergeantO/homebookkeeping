@@ -61,11 +61,10 @@ const distPath = (config.env === 'production')
     ? path.resolve(__dirname, '..', '..', '..', 'client', 'dist')
     : path.resolve(__dirname, '..', '..', 'client', 'dist')
     
-// const indexPath = path.join(distPath, 'index.html')
-// console.log(config.env, indexPath)
 app.use(express.static(distPath));
 app.get('*',  function (request, response) {
-  response.sendFile(path.resolve(distPath, 'index.html'));
+  response.send(path.resolve(distPath, 'index.html'))
+  //response.sendFile(path.resolve(distPath, 'index.html'));
 });
 
 // convert error to ApiError, if needed
