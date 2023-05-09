@@ -6,16 +6,9 @@ button {
   border-width: 1px;
   border-radius: 0.2rem;
   color: black;
-  padding: .5rem 1rem;
-  margin: .2rem;
 }
 
-input {
-  padding: .5rem 1rem;
-  margin: .2rem;
-}
-
-select {
+button, input, select {
   padding: .5rem 1rem;
   margin: .2rem;
 }
@@ -85,6 +78,7 @@ th {
   width: 30px;
   height: 30px;
   border-radius: 50%;
+  padding: 0;
 }
 
 @media (hover: hover) {
@@ -98,8 +92,6 @@ header {
   margin: 0 auto;
   padding: .5rem 3rem;
 }
-
-
 
 header .logo {
   width: 100%;
@@ -131,7 +123,6 @@ ul.menu {
 .menu-item {
   text-transform: uppercase;
   font-size: 20pt;
-  
 }
 
 .menu-item > a {
@@ -159,11 +150,28 @@ main#content {
 }
 
 @media screen and (max-width: 768px) {
+  button, input, select {
+    padding: .25rem;
+    margin: .1rem;
+  }
   header {
-    padding: .5rem
+    padding: .25rem
+  }
+  header .logo {
+    padding-top: 0;
+    padding-bottom: .25rem;
+    font-size: 8pt;
   }
   main#content {
     padding: .5rem;
+  }
+  .menu-item {
+    text-transform: uppercase;
+    font-size: 12pt;
+  }
+  .my-2 {
+    margin-top: .5rem;
+    margin-bottom: .5rem;
   }
 }
 
