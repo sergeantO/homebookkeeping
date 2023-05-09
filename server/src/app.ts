@@ -21,6 +21,12 @@ if (config.env !== 'test') {
   app.use(morgan.errorHandler);
 }
 
+const distPath = (config.env === 'production') 
+    ? path.resolve(__dirname, '..', '..', '..', 'client', 'dist')
+    : path.resolve(__dirname, '..', '..', 'client', 'dist')
+    
+app.use(express.static(distPath));
+
 // set security HTTP headers
 app.use(helmet());
 
@@ -57,11 +63,7 @@ app.use('/v1', (req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
 });
 
-const distPath = (config.env === 'production') 
-    ? path.resolve(__dirname, '..', '..', '..', 'client', 'dist')
-    : path.resolve(__dirname, '..', '..', 'client', 'dist')
-    
-app.use(express.static(distPath));
+
 
 // convert error to ApiError, if needed
 app.use(errorConverter);
