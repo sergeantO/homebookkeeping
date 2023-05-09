@@ -20,6 +20,8 @@ if (config.env !== 'test') {
   app.use(morgan.errorHandler);
 }
 
+app.use(express.static(__dirname + '/../../client/dist'));
+
 // set security HTTP headers
 app.use(helmet());
 
