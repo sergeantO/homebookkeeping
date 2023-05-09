@@ -21,8 +21,8 @@ if (config.env !== 'test') {
 }
 
 const distPath = (config.env === 'production') 
-    ? '/../../client/dist'
-    : '/../../../client/dist'
+    ? '/../../../client/dist' 
+    : '/../../client/dist'
 }
 app.use(express.static(__dirname + distPath));
 
