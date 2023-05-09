@@ -4,3 +4,4 @@ cd client
 yarn build
 cd ../server
 yarn start
+sudo service nginx restart
