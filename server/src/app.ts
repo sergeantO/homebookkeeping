@@ -61,9 +61,11 @@ const distPath = (config.env === 'production')
     ? path.resolve(__dirname, '..', '..', '..', 'client', 'dist')
     : path.resolve(__dirname, '..', '..', 'client', 'dist')
     
-// serve static assets normally
-app.use('/', express.static(distPath), function (req, res) {
-  res.sendFile(path.resolve(distPath, 'index.html'));
+// const indexPath = path.join(distPath, 'index.html')
+// console.log(config.env, indexPath)
+app.use(express.static(distPath));
+app.get('*',  function (request, response) {
+  response.sendFile(path.resolve(distPath, 'index.html'));
 });
 
 // convert error to ApiError, if needed
