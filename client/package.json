@@ -13,6 +13,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "axios": "^1.4.0",
     "pinia": "^2.0.32",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
@@ -35,5 +36,7 @@
     "vite": "^4.1.4",
     "vitest": "^0.29.1",
     "vue-tsc": "^1.2.0"
-  }
+  },
+  "main": "index.js",
+  "license": "MIT"
 }

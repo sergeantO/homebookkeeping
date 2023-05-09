@@ -8,7 +8,7 @@ export interface IBalanceResult {
     credit: number
     debit: number
     result: number
-    turnover: number
+    endVal: number
 }
 
 export const useBalanceStore = defineStore('balance', () => {
@@ -70,8 +70,8 @@ export const useBalanceStore = defineStore('balance', () => {
                 startVal: startVal,
                 credit: account.credit(operationsByAccountAndPeriod),
                 debit: account.debit(operationsByAccountAndPeriod),
-                result: account.result(operationsByAccountAndPeriod) + startVal,
-                turnover: account.turnover(operationsByAccountAndPeriod),
+                result: account.result(operationsByAccountAndPeriod),
+                endVal: account.result(operationsByAccountAndPeriod) + startVal
             }
 
             // total.credit += curr.credit

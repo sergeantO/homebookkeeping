@@ -1,12 +1,13 @@
-import express from 'express';
+import express, { Router } from 'express';
 import authRoute from './auth.route';
 import userRoute from './user.route';
+import dataRoute from './data.route';
 import docsRoute from './docs.route';
 import config from '../../config/config';
 
 const router = express.Router();
 
-const defaultRoutes = [
+const defaultRoutes: { path: string, route: Router }[] = [
   {
     path: '/auth',
     route: authRoute
@@ -14,6 +15,10 @@ const defaultRoutes = [
   {
     path: '/users',
     route: userRoute
+  },
+  {
+    path: '/data',
+    route: dataRoute
   }
 ];
 

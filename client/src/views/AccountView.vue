@@ -28,7 +28,7 @@
         </div>
 
         <div class="col">
-            <table>
+            <table v-if="acount">
                 <thead>
                     <th>операция</th>
                     <th>кор. счет</th>
@@ -38,8 +38,8 @@
                 <tbody>
                     <tr>
                         <th colspan="2">Начальный остаток</th>
-                        <th>{{ (acount.isAssetAccount) ? 0 : '' }}</th>
-                        <th>{{ (!acount.isAssetAccount) ? 0 : '' }}</th>
+                        <th>{{ (acount.isAssetAccount) ? balance?.startVal : '' }}</th>
+                        <th>{{ (!acount.isAssetAccount) ? balance?.startVal : '' }}</th>
                     </tr>
                     <tr>
                         <td>
@@ -63,6 +63,11 @@
                         <th>{{ (acount.isAssetAccount) ? totalDebit - totalCredit : '' }}</th>
                         <th>{{ (acount.isAssetAccount) ? '' : totalCredit - totalDebit }}</th>
                     </tr>
+                    <tr>
+                        <th colspan="2">Итоговый остаток</th>
+                        <th>{{ (acount.isAssetAccount) ?  balance?.endVal : '' }}</th>
+                        <th>{{ (acount.isAssetAccount) ? '' : balance?.endVal }}</th>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -70,6 +75,7 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import AccountOperation from '@/components/AccountOperation.vue';
 import ActiveOnlyCheckbox from '@/components/ActiveOnlyCheckbox.vue'
 import { useAccountStore, useBalanceStore, useOpetationStore } from '@/stores/counter';
@@ -78,11 +84,11 @@ import Period from '@/components/Period.vue';
 import SelectedList from '@/components/SelectedList.vue';
 import type { Account } from '@/models';
 
-const AccountStore = useAccountStore()
-const OpetationStore = useOpetationStore()
+const accountStore = useAccountStore()
+const opetationStore = useOpetationStore()
 const balanceStore = useBalanceStore()
 
-export default {
+export default defineComponent({
     components: {
         AccountOperation: AccountOperation,
         Period: Period,
@@ -100,7 +106,11 @@ export default {
     computed: {
         acount() {
             const id = +this.$route.params.id
-            return AccountStore.getAccount(id)
+            return accountStore.getAccount(id)
+        },
+        balance() {
+            const id = +this.$route.params.id
+            return balanceStore.process.find(b => b.account.id === id)
         },
         operations() {
             if (!this.acount) {
@@ -128,32 +138,30 @@ export default {
             }, 0)
         },
         allAccounts() {
-            return AccountStore.accountList
+            return accountStore.accountList
         },
         activeAccounts() {
             return balanceStore.accounts.filter(i => i.isAssetAccount)
         },
         passiveAccounts() {
-            
-
             return balanceStore.accounts.filter(i => !i.isAssetAccount)
         },
     },
     methods: {
         setSecondAccount(accountId: number) {
-            this.secondAccount = AccountStore.getAccount( accountId )
+            this.secondAccount = accountStore.getAccount( accountId )
         },
         addOperation() {
             if (this.secondAccount) {
                 if ( this.debit > 0 ) {
-                    OpetationStore.addOperation(this.name, this.debit, this.secondAccount, this.acount)
+                    opetationStore.addOperation(this.name, this.debit, this.secondAccount, this.acount)
                 } else if ( this.credit > 0 ) {
-                    OpetationStore.addOperation(this.name, this.credit, this.acount, this.secondAccount)
+                    opetationStore.addOperation(this.name, this.credit, this.acount, this.secondAccount)
                 }
             }
         }
     }
-}
+})
 </script>
 
 <style>

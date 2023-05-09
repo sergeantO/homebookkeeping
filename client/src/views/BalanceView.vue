@@ -1,4 +1,5 @@
 <template>
+    <CreateAccount />
     <div class="row my-2">
         <div class="col">
             <h1>Баланс</h1>
@@ -7,126 +8,138 @@
         <div class="col">
             <Period />
         </div>
-        <div class="col">
-            <input type="text" v-model="newAccountName">
-        </div>
     </div>
 
-    <div class="row">
+    <div class="row  my-2">
         <div class="col">
             <table>
                 <thead>
-                    <th colspan="3">Актив</th>
-                    <th>на начало</th>
-                    <th>оборот</th>
-                    <th>на конец</th>
-                    <th></th>
+                    <th colspan="2">Актив</th>
+                    <th>вход</th>
+                    <th>дебит</th>
+                    <th>кредит</th>
+                    <th>итог</th>
+                    <th>выход</th>
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="3" class="bg-sky">
-                            Внеоборотные активы
-                            <button class="add-button" @mouseup="addFixedAssetAccount">+</button>
-                        </td>
+                        <td colspan="2" class="bg-sky">Внеоборотные активы</td>
                         <td class="bg-sky">{{ totalFixedAssets.startValue }}</td>
-                        <td class="bg-sky">{{ totalFixedAssets.turnover }}</td>
+                        <td class="bg-sky">{{ totalFixedAssets.debit }}</td>
+                        <td class="bg-sky">{{ totalFixedAssets.credit }}</td>
                         <td class="bg-sky">{{ totalFixedAssets.result }}</td>
-                        <td class="bg-sky"></td>
+                        <td class="bg-sky">{{ totalFixedAssets.endValue }}</td>
                     </tr>
                     <tr v-for="balance of fixedAssets" :key="balance.account.id">
-                        <td colspan="3">
-                            <RouterLink :to="{ name: 'account', params: { id: balance.account.id }}">{{ balance.account.name }}</RouterLink>
+                        <td colspan="2">
+                            <RouterLink :to="{ name: 'account', params: { id: balance.account.id } }">{{ balance.account.name
+                            }}</RouterLink>
                         </td>
                         <td class="num">{{ balance.startVal }}</td>
-                        <td class="num">{{ balance.turnover }}</td>
-                        <td class="num">{{ balance.result }}</td>
-                        <td><button v-if="balance.result > 0" @click="toLose(balance.account, balance.result)">-></button> </td>
+                        <td class="num">{{ balance.debit }}</td>
+                        <td class="num">{{ balance.credit }}</td>
+                        <td class="num">{{ balance.result }} 
+                            <button v-if="balance.result > 0" @click="toLose(balance.account, balance.result)">-></button>
+                        </td>
+                        <td class="num">{{ balance.endVal }}</td>
                     </tr>
 
                     <tr>
-                        <td colspan="3" class="bg-sky">
-                            Оборотные активы
-                            <button class="add-button" @mouseup="addCurrentAssetsAccount">+</button>
-                        </td>
+                        <td colspan="2" class="bg-sky">Оборотные активы</td>
                         <td class="bg-sky">{{ totalCurrentAssets.startValue }}</td>
-                        <td class="bg-sky">{{ totalCurrentAssets.turnover }}</td>
+                        <td class="bg-sky">{{ totalCurrentAssets.debit }}</td>
+                        <td class="bg-sky">{{ totalCurrentAssets.credit }}</td>
                         <td class="bg-sky">{{ totalCurrentAssets.result }}</td>
-                        <td class="bg-sky"></td>
+                        <td class="bg-sky">{{ totalCurrentAssets.endValue }}</td>
                     </tr>
+
                     <tr v-for="balance of currentAssets">
-                        <td colspan="3">
-                            <RouterLink :to="{ name: 'account', params: { id: balance.account.id }}">{{ balance.account.name }}</RouterLink>
+                        <td colspan="2">
+                            <RouterLink :to="{ name: 'account', params: { id: balance.account.id } }">{{ balance.account.name
+                            }}</RouterLink>
                         </td>
                         <td class="num">{{ balance.startVal }}</td>
-                        <td class="num">{{ balance.turnover }}</td>
-                        <td class="num">{{ balance.result }}</td>
-                        <td><button v-if="balance.result > 0" @click="toLose(balance.account, balance.result)">-></button> </td>
+                        <td class="num">{{ balance.debit }}</td>
+                        <td class="num">{{ balance.credit }}</td>
+                        <td class="num">{{ balance.result }}
+                            <button v-if="balance.result > 0" @click="toLose(balance.account, balance.result)">-></button>
+                        </td>
+                        <td class="num">{{ balance.result + balance.startVal }}</td>
                     </tr>
                     <tr>
-                        <td colspan="3" class="bg-sky">
-                            Итог по активам
-                        </td>
+                        <td colspan="2" class="bg-sky">Итог по активам</td>
                         <td class="bg-sky">{{ totalCurrentAssets.startValue + totalFixedAssets.startValue }}</td>
-                        <td class="bg-sky">{{ totalCurrentAssets.turnover + totalFixedAssets.turnover }}</td>
+                        <td class="bg-sky">{{ totalCurrentAssets.debit + totalFixedAssets.debit }}</td>
+                        <td class="bg-sky">{{ totalCurrentAssets.credit + totalFixedAssets.credit }}</td>
                         <td class="bg-sky">{{ totalCurrentAssets.result + totalFixedAssets.result }}</td>
-                        <td class="bg-sky"></td>
+                        <td class="bg-sky">{{ totalCurrentAssets.endValue +  totalFixedAssets.endValue }}</td>
                     </tr>
                 </tbody>
 
             </table>
         </div>
 
+    </div>
+    <div class="row my-2">
         <div class="col">
             <table>
                 <thead>
-                    <th colspan="3">Пассив</th>
-                    <th>на начало</th>
-                    <th>оборот</th>
-                    <th>на конец</th>
+                    <th colspan="2">Пасив</th>
+                    <th>вход</th>
+                    <th>дебит</th>
+                    <th>кредит</th>
+                    <th>итог</th>
+                    <th>выход</th>
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="3" class="bg-sky">
-                            Собственный капитал
-                            <button class="add-button" @mouseup="addOwnCapitalAccount">+</button>
-                        </td>
+                        <td colspan="2" class="bg-sky">Собственный капитал</td>
                         <td class="bg-sky">{{ totalOwnCapitalAssets.startValue }}</td>
-                        <td class="bg-sky">{{ totalOwnCapitalAssets.turnover }}</td>
+                        <td class="bg-sky">{{ totalOwnCapitalAssets.debit }}</td>
+                        <td class="bg-sky">{{ totalOwnCapitalAssets.credit }}</td>
                         <td class="bg-sky">{{ totalOwnCapitalAssets.result }}</td>
+                        <td class="bg-sky">{{ totalOwnCapitalAssets.endValue }}</td>
                     </tr>
                     <tr v-for="balance of ownCapitalAssets">
-                        <td colspan="3">
-                            <RouterLink :to="{ name: 'account', params: { id: balance.account.id }}">{{ balance.account.name }}</RouterLink>
+                        <td colspan="2">
+                            <RouterLink :to="{ name: 'account', params: { id: balance.account.id } }">{{ balance.account.name
+                            }}</RouterLink>
                         </td>
                         <td class="num">{{ balance.startVal }}</td>
-                        <td class="num">{{ balance.turnover }}</td>
+                        <td class="num">{{ balance.debit }}</td>
+                        <td class="num">{{ balance.credit }}</td>
                         <td class="num">{{ balance.result }}</td>
+                        <td class="num">{{ balance.result + balance.startVal }}</td>
                     </tr>
-
+                
                     <tr>
-                        <td colspan="3" class="bg-sky">
-                            Долги
-                            <button class="add-button" @mouseup="addDebtAccount">+</button>
-                        </td>
+                        <td colspan="2" class="bg-sky">Долги</td>
                         <td class="bg-sky">{{ totalDebits.startValue }}</td>
-                        <td class="bg-sky">{{ totalDebits.turnover }}</td>
+                        <td class="bg-sky">{{ totalDebits.debit }}</td>
+                        <td class="bg-sky">{{ totalDebits.credit }}</td>
                         <td class="bg-sky">{{ totalDebits.result }}</td>
+                        <td class="bg-sky">{{ totalDebits.endValue }}</td>
                     </tr>
                     <tr v-for="balance of debts">
-                        <td colspan="3">
-                            <RouterLink :to="{ name: 'account', params: { id: balance.account.id }}">{{ balance.account.name }}</RouterLink>
+                        <td colspan="2">
+                            <RouterLink :to="{ name: 'account', params: { id: balance.account.id } }">{{ balance.account.name
+                            }}</RouterLink>
                         </td>
                         <td class="num">{{ balance.startVal }}</td>
-                        <td class="num">{{ balance.turnover }}</td>
+                        <td class="num">{{ balance.debit }}</td>
+                        <td class="num">{{ balance.credit }}</td>
                         <td class="num">{{ balance.result }}</td>
+                        <td class="num">{{ balance.result + balance.startVal }}</td>
                     </tr>
                     <tr>
-                        <td colspan="3" class="bg-sky">
+                        <td colspan="2" class="bg-sky">
                             Итоги по пассивам
                         </td>
                         <td class="bg-sky">{{ totalDebits.startValue + totalOwnCapitalAssets.startValue }}</td>
-                        <td class="bg-sky">{{ totalDebits.turnover + totalOwnCapitalAssets.turnover }}</td>
+                        <td class="bg-sky">{{ totalDebits.debit + totalOwnCapitalAssets.debit }}</td>
+                        <td class="bg-sky">{{ totalDebits.credit + totalOwnCapitalAssets.credit }}</td>
                         <td class="bg-sky">{{ totalDebits.result + totalOwnCapitalAssets.result }}</td>
+                        <td class="bg-sky">{{ totalDebits.endValue +  totalOwnCapitalAssets.endValue }}</td>
                     </tr>
                 </tbody>
 
@@ -139,6 +152,7 @@
 <script lang="ts">
 import { useAccountStore, useBalanceStore, useOpetationStore, type IBalanceResult, usePeriodStore } from '@/stores/counter';
 import Period from '@/components/Period.vue';
+import CreateAccount from '@/components/CreateAccount.vue';
 import ActiveOnlyCheckbox from '@/components/ActiveOnlyCheckbox.vue'
 import { Account, AccountTypeEnum } from '@/models';
 import { defineComponent } from 'vue';
@@ -180,98 +194,72 @@ opetationStore.addOperation('Заказали Я.Лавку', 3000, family, havk
 export default defineComponent({
     components: {
         Period: Period,
-        ActiveOnlyCheckbox: ActiveOnlyCheckbox
+        ActiveOnlyCheckbox: ActiveOnlyCheckbox,
+        CreateAccount
     },
     data() {
         return {
             newAccountName: '',
+            newAccountType: 0 as AccountTypeEnum
         }
     },
     methods: {
-        addCurrentAssetsAccount() {
-            if (this.newAccountName.length > 0) {
-                accountStore.addAccount(AccountTypeEnum.CurrentAsset, this.newAccountName)
-                this.newAccountName = ''
-            }
-        },
-        addDebtAccount() {
-            if (this.newAccountName.length > 0) {
-                accountStore.addAccount(AccountTypeEnum.Debt, this.newAccountName)
-                this.newAccountName = ''
-            }
-        },
-        addFixedAssetAccount() {
-            if (this.newAccountName.length > 0) {
-                accountStore.addAccount(AccountTypeEnum.FixedAsset, this.newAccountName)
-                this.newAccountName = ''
-            }
-        },
-        addOwnCapitalAccount() {
-            if (this.newAccountName.length > 0) {
-                accountStore.addAccount(AccountTypeEnum.OwnCapital, this.newAccountName)
-                this.newAccountName = ''
+        createAccount() {
+            const newAccountType = +this.newAccountType
+            const newAccountName = this.newAccountName
+            if (newAccountName.length > 0) {
+                accountStore.addAccount(newAccountType, newAccountName)
             }
         },
         toLose(account: Account, sum: number) {
             balanceStore.toLose(account, sum)
         },
+        total(balances: IBalanceResult[]) {
+            return balances.reduce((acc, i) => {
+                acc.credit += i.credit
+                acc.debit += i.debit
+                acc.result += i.result
+                acc.startValue += i.startVal
+                acc.endValue += i.endVal
+                
+                return acc
+            }, { result: 0, startValue: 0, debit: 0, credit: 0, endValue: 0 })
+        }
     },
     computed: {
         activeBalance(): IBalanceResult[] {
             return balanceStore.process
         },
-
         debts() {
             return this.activeBalance
                 .filter((i) => i.account.type === AccountTypeEnum.Debt)
-        }, 
+        },
         fixedAssets() {
             return this.activeBalance
                 .filter(i => i.account.type === AccountTypeEnum.FixedAsset)
-        }, 
+        },
         ownCapitalAssets() {
             return this.activeBalance
                 .filter(i => i.account.type === AccountTypeEnum.OwnCapital)
-        }, 
+        },
         currentAssets() {
             return this.activeBalance
                 .filter(i => i.account.type === AccountTypeEnum.CurrentAsset)
         },
-
         totalDebits() {
-            return this.debts.reduce((acc, i) => {
-                acc['result'] +=  i.result 
-                acc['turnover'] += i.turnover
-                acc['startValue'] += i.startVal
-                return acc
-            }, { result: 0, startValue: 0, turnover: 0 })
+            return this.total(this.debts)
         },
         totalFixedAssets() {
-            return this.fixedAssets.reduce((acc, i) => {
-                acc['result'] +=  i.result 
-                acc['turnover'] += i.turnover
-                acc['startValue'] += i.startVal
-                return acc
-            }, { result: 0, startValue: 0, turnover: 0 })
+            return this.total(this.fixedAssets)
         },
         totalOwnCapitalAssets() {
-            return this.ownCapitalAssets.reduce((acc, i) => {
-                acc['result'] +=  i.result 
-                acc['turnover'] += i.turnover
-                acc['startValue'] += i.startVal
-                return acc
-            }, { result: 0, startValue: 0, turnover: 0 })
+            return this.total(this.ownCapitalAssets)
         },
         totalCurrentAssets() {
-            return this.currentAssets.reduce((acc, i) => {
-                acc['result'] +=  i.result 
-                acc['turnover'] += i.turnover
-                acc['startValue'] += i.startVal
-                return acc
-            }, { result: 0, startValue: 0, turnover: 0 })
+            return this.total(this.currentAssets)
         }
     },
-    
+
 })
 </script>
 
@@ -304,7 +292,8 @@ table {
     border-spacing: 0px;
 }
 
-th, td {
+th,
+td {
     border-bottom: 1px solid black;
     padding: 4px 15px;
     text-align: left;
@@ -321,5 +310,4 @@ th {
     width: 30px;
     height: 30px;
     border-radius: 50%;
-}
-</style>
+}</style>

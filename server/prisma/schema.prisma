@@ -20,6 +20,8 @@ model User {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   Token           Token[]
+  accounts        Account[]
+  operations      Operation[] @relation("UserOperations")
 }
 
 model Token {
@@ -29,8 +31,40 @@ model Token {
   expires     DateTime
   blacklisted Boolean
   createdAt   DateTime  @default(now())
-  user        User      @relation(fields: [userId], references: [id])
+  User        User      @relation(fields: [userId], references: [id])
   userId      Int
+}
+
+model Account {
+  id               Int          @id @default(autoincrement())
+  type             AccountType
+  name             String
+  createdAt        DateTime     @default(now())
+  users            User[]
+  Balances         Balance[]    @relation("AccountBalance")
+  creditOperations Operation[] @relation("CreditAccountOperations")
+  debitOperations  Operation[] @relation("DebitAccountOperations")
+}
+
+model Operation {
+  id               Int       @id @default(autoincrement())
+  name             String
+  value            Int
+  User             User      @relation("UserOperations", fields: [userId], references: [id])
+  CreditAccount    Account   @relation("CreditAccountOperations", fields: [creditAccountId], references: [id])
+  DebitAccount     Account   @relation("DebitAccountOperations", fields: [debitAccountId], references: [id])
+  createdAt        DateTime  @default(now())
+  creditAccountId  Int
+  debitAccountId   Int
+  userId           Int
+}
+
+model Balance {
+  id           Int       @id @default(autoincrement())
+  value        Int
+  account      Account   @relation("AccountBalance", fields: [acountId], references: [id])
+  closeAt      DateTime  @default(now())
+  acountId     Int
 }
 
 enum Role {
@@ -43,4 +77,11 @@ enum TokenType {
   REFRESH
   RESET_PASSWORD
   VERIFY_EMAIL
+}
+
+enum AccountType {
+    CURRENT_ASSET
+    FIXED_ASSET
+    DEBT
+    OWN_CAPITAL
 }
