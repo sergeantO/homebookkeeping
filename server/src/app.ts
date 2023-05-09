@@ -61,9 +61,8 @@ const distPath = (config.env === 'production')
     ? path.resolve(__dirname, '..', '..', '..', 'client', 'dist')
     : path.resolve(__dirname, '..', '..', 'client', 'dist')
     
-// send static
-app.use(express.static(distPath));
-app.get('*', function (req, res) {
+// serve static assets normally
+app.use('/', express.static(distPath), function (req, res) {
   res.sendFile(path.resolve(distPath, 'index.html'));
 });
 
