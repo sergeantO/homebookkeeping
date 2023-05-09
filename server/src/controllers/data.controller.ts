@@ -5,7 +5,7 @@ import exclude from '../utils/exclude';
 import { Balance, Operation, Account } from '@prisma/client';
 import pick from '../utils/pick';
 
-const getAccountsWithBalance = catchAsync(async (req, res) => {
+const getAccounts = catchAsync(async (req, res) => {
     const filter = pick(req.query, ['monthYear']);
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
     
@@ -16,11 +16,15 @@ const getAccountsWithBalance = catchAsync(async (req, res) => {
     res.send(accounts);
 })
 
+const getBalance = catchAsync(async(req,res) => {
+    
+})
+
 const getOperations = catchAsync(async (req, res) => {
     const filter = pick(req.query, ['monthYear']);
     const date = new Date()
     const accountId = 1
-    const operations = await operationService.queryOperations(accountId, date)
+    const operations = await operationService.getOperations(date)
 
     res.send(operations);
 })
@@ -30,16 +34,17 @@ const createOperation = catchAsync(async (req, res) => {
     const userId = 1
     const operation = await operationService.createOperation(name, value, debitAccount, creditAccount, userId);
     res.status(httpStatus.CREATED).send(operation);
+
 })
 
 const createAccount = catchAsync(async (req, res) => {
     const { name, type } = req.body
-    const account = accountService.createAccount(name, type)
+    const account = await accountService.createAccount(name, type)
     res.status(httpStatus.CREATED).send(account);
 })
 
 export default {
-    getAccountsWithBalance,
+    getAccountsWithBalance: getAccounts,
     getOperations,
     createOperation,
     createAccount

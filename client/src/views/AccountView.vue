@@ -1,16 +1,20 @@
 <template>
-    <div class="row">
+    
+    <div class="row my-2">
         <div class="col">
             <h1>Счета</h1>
+        </div>
+        <div class="col">
             <ActiveOnlyCheckbox />
         </div>
-        
         <div class="col">
             <Period />
         </div>
     </div>
 
-    <div class="row">
+    <CreateAccount />
+
+    <div class="row my-2">
         <div class="col">
             <p>Активные счета</p>
             <ul>
@@ -78,11 +82,11 @@
 import { defineComponent } from 'vue';
 import AccountOperation from '@/components/AccountOperation.vue';
 import ActiveOnlyCheckbox from '@/components/ActiveOnlyCheckbox.vue'
-import { useAccountStore, useBalanceStore, useOpetationStore } from '@/stores/counter';
+import CreateAccount from '@/components/CreateAccount.vue';
 import Period from '@/components/Period.vue';
-
 import SelectedList from '@/components/SelectedList.vue';
 import type { Account } from '@/models';
+import { useAccountStore, useOpetationStore, useBalanceStore } from '@/stores';
 
 const accountStore = useAccountStore()
 const opetationStore = useOpetationStore()
@@ -94,6 +98,7 @@ export default defineComponent({
         Period: Period,
         SelectedList: SelectedList,
         ActiveOnlyCheckbox: ActiveOnlyCheckbox,
+        CreateAccount
     },
     data() {
         return {
@@ -117,7 +122,7 @@ export default defineComponent({
                 return []
             } else {
                 const account = this.acount
-                return balanceStore.operationsInPeriod
+                return opetationStore.operationsInPeriod
                     .filter(i => i.creditAccount.id === account.id || i.debitAccount.id === account.id)
             }
         },
@@ -141,10 +146,10 @@ export default defineComponent({
             return accountStore.accountList
         },
         activeAccounts() {
-            return balanceStore.accounts.filter(i => i.isAssetAccount)
+            return accountStore.activeAccounts.filter(i => i.isAssetAccount)
         },
         passiveAccounts() {
-            return balanceStore.accounts.filter(i => !i.isAssetAccount)
+            return accountStore.activeAccounts.filter(i => !i.isAssetAccount)
         },
     },
     methods: {

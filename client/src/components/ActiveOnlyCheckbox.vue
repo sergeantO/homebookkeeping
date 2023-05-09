@@ -6,15 +6,16 @@
 </template>
 
 <script lang="ts">
-import { useBalanceStore } from '@/stores/counter';
+
+import { useAccountStore } from '@/stores';
 import { defineComponent } from 'vue';
 
-const balanceStore = useBalanceStore()
+const accountStore = useAccountStore()
 
 export default defineComponent({
     computed: {
         store() {
-            return balanceStore
+            return accountStore
         }
     }
 })

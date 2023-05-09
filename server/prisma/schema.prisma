@@ -61,9 +61,15 @@ model Operation {
 
 model Balance {
   id           Int       @id @default(autoincrement())
-  value        Int
+  startValue   Int
+  credit       Int
+  debet        Int
+  result       Int
+  endValue     Int
   account      Account   @relation("AccountBalance", fields: [acountId], references: [id])
-  closeAt      DateTime  @default(now())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deadDateTime DateTime
   acountId     Int
 }
 

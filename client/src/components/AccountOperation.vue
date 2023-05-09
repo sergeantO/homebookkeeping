@@ -13,12 +13,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { Account, Operation } from '@/models/Operation';
-import { useAccountStore, useOpetationStore } from '@/stores/counter';
-
-const { accountList, getAccount } = useAccountStore()
-const { operationList, addOperation } = useOpetationStore()
-
 
 export default defineComponent({
     props: {

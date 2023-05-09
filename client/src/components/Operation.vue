@@ -29,8 +29,8 @@ export default defineComponent({
             return id
         },
         dateFormat() {
-            const date = this.operation.date as Date
-            return date.toLocaleDateString()
+            const date = this.operation.createdAt as Date
+            return date?.toLocaleDateString() || ''
         }
     }
 })

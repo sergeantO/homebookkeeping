@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import type { AccountTypeEnum } from '@/models';
-import { useAccountStore } from '@/stores/counter';
+import { useAccountStore } from '@/stores';
 import { defineComponent } from 'vue';
 
 const accountStore = useAccountStore()

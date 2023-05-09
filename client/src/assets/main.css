@@ -27,6 +27,54 @@ a,
   pointer-events: none;
 }
 
+.row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  margin: 0 0.5rem;
+}
+
+.my-2 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.bg-sky {
+  background-color: skyblue;
+  font-weight: bold;
+}
+
+table {
+  width: 100%;
+  border-spacing: 0px;
+}
+
+th,
+td {
+  border-bottom: 1px solid black;
+  padding: 4px 15px;
+  text-align: left;
+}
+
+th {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.add-button {
+  display: inline-block;
+  margin: .5rem;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
 @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);

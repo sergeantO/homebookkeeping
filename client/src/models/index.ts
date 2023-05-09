@@ -1,5 +1,5 @@
-import { Account, AccountTypeEnum } from "./Account";
+import { Account, AccountType } from "./Account";
 import { User } from "./User"
 import { Operation } from "./Operation";
 
-export { Account, AccountTypeEnum, User, Operation }
+export { Account, AccountType as AccountTypeEnum, User, Operation }

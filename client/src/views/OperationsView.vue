@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div class="row my-2">
         <div class="col">
             <h1>Операции </h1>
         </div>
@@ -8,7 +8,7 @@
         </div>
     </div>
     
-    <div class="row">
+    <div class="row my-2">
         <div class="col">
             <table>
                 <thead>
@@ -40,17 +40,18 @@
 </template>
 
 <script lang="ts">
-import { useAccountStore, useBalanceStore, useOpetationStore } from '@/stores/counter';
+
 import Operation from '@/components/Operation.vue'
 import SelectedList from '@/components/SelectedList.vue';
 import Period from '@/components/Period.vue';
 import type { Account } from '@/models';
+import { defineComponent } from 'vue';
+import { useAccountStore, useOpetationStore } from '@/stores';
 
-const AccountStore = useAccountStore()
-const OpetationStore = useOpetationStore()
-const balanceStore = useBalanceStore()
+const accountStore = useAccountStore()
+const opetationStore = useOpetationStore()
 
-export default {
+export default defineComponent({
     components: {
         Operation,
         SelectedList,
@@ -67,10 +68,10 @@ export default {
     },
     computed: {
         operations() {
-            return balanceStore.operationsInPeriod
+            return opetationStore.operationsInPeriod
         },
         accounts() {
-            return AccountStore.accountList
+            return accountStore.accountList
         },
         isDisabledAddButton() {
             return typeof this.creditAccount === "undefined" 
@@ -81,14 +82,14 @@ export default {
     },
     methods: {
         setDebitAccount(accountId: number) {
-            this.debitAccount = AccountStore.getAccount( accountId )
+            this.debitAccount = accountStore.getAccount( accountId )
         },
         setCreditAccount(accountId: number) {
-            this.creditAccount = AccountStore.getAccount( accountId )
+            this.creditAccount = accountStore.getAccount( accountId )
         },
         addOperation() {
             if (!this.isDisabledAddButton) {
-                OpetationStore.addOperation(this.name, this.val, this.creditAccount as Account, this.debitAccount as Account)
+                opetationStore.addOperation(this.name, this.val, this.creditAccount as Account, this.debitAccount as Account)
                 
                 this.name = ''
                 this.val = 0
@@ -99,7 +100,7 @@ export default {
         },
         
     }
-}
+})
 </script>
 
 <style>

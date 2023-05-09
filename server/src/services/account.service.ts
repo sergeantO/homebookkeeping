@@ -1,4 +1,4 @@
-import { AccountType } from '@prisma/client';
+import { Account, AccountType } from '@prisma/client';
 import prisma from '../client';
 
 const createAccount = async (name: string, type: AccountType) => {
@@ -10,23 +10,22 @@ const createAccount = async (name: string, type: AccountType) => {
     })
 }
 
+const isAssetAccount = (account: Account) => {
+    if (account.type === AccountType.CURRENT_ASSET || account.type === AccountType.FIXED_ASSET) {
+        return true
+    }
+    return false
+}
+
 const queryAccounts = async (userId: number, closeAt: Date) => {
-    return prisma.account.findMany({
-        where: {
-            users: {
-                some: {
-                    id: { equals: userId }
-                }
-            }
-        },
-        include: {
-            Balances: {
-                where: {
-                    closeAt: { equals: closeAt }
-                },
-                select: { value:true }
-            }
-        }
+    return await prisma.account.findMany({
+        // where: {
+        //     users: {
+        //         some: {
+        //             id: { equals: userId }
+        //         }
+        //     }
+        // },
     })
 }
 
@@ -40,4 +39,5 @@ export default {
     getAccountById,
     queryAccounts,
     createAccount,
+    isAssetAccount,
 };

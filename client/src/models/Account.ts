@@ -1,22 +1,19 @@
-import idCounter from "./IdCounter"
 import type { Operation } from "./Operation"
 
-export enum AccountTypeEnum {
-    CurrentAsset, 
-    FixedAsset, 
-    Debt, 
-    OwnCapital
+export enum AccountType {
+    CURRENT_ASSET, 
+    FIXED_ASSET, 
+    DEBT, 
+    OWN_CAPITAL
 }
 
 export class Account {
-    id: number
     
-    constructor(public type: AccountTypeEnum, public name: string) {
-        this.id = idCounter.nextId()
+    constructor(public id: number, public type: AccountType, public name: string) {
     }
 
     get isAssetAccount(): boolean {
-        if (this.type === AccountTypeEnum.CurrentAsset || this.type === AccountTypeEnum.FixedAsset) {
+        if (this.type === AccountType.CURRENT_ASSET || this.type === AccountType.FIXED_ASSET) {
             return true
         }
         return false

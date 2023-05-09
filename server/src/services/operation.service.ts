@@ -19,6 +19,68 @@ const createOperation = (
     })
 }
 
+const getOperationsBeforeDate = (accountId: number, endDate: Date) => {
+    return prisma.operation.findMany({
+        where: {
+            AND: {
+                OR: {
+                    creditAccountId: { equals: accountId },
+                    debitAccountId: { equals: accountId },
+                },
+                createdAt: { 
+                    lt: endDate
+                },
+            }
+        }
+    })
+}
+
+
+const getOperationsAfterDate = (accountId: number, startDate: Date) => {
+    return prisma.operation.findMany({
+        where: {
+            AND: {
+                OR: {
+                    creditAccountId: { equals: accountId },
+                    debitAccountId: { equals: accountId },
+                },
+                createdAt: { 
+                    gte: startDate
+                },
+            }
+        }
+    })
+}
+
+const getOperationsBetween = (accountId: number, startDate: Date, endDate: Date) => {
+    return prisma.operation.findMany({
+        where: {
+            AND: {
+                OR: {
+                    creditAccountId: { equals: accountId },
+                    debitAccountId: { equals: accountId },
+                },
+                createdAt: { 
+                    gte: startDate,
+                    lt: endDate
+                },
+            }
+        }
+    })
+}
+
+const getOperations = (date: Date) => {
+    const { startDate, endDate } = monthYear(date)
+    return prisma.operation.findMany({
+        where: {
+            createdAt: { 
+                gte: startDate,
+                lt: endDate
+            },
+        }
+    })
+}
+
 const queryOperations = (accountId: number, date: Date) => {
     const { startDate, endDate } = monthYear(date)
     return prisma.operation.findMany({
@@ -41,5 +103,9 @@ const queryOperations = (accountId: number, date: Date) => {
 
 export default {
     queryOperations,
-    createOperation
+    createOperation,
+    getOperations,
+    getOperationsBetween,
+    getOperationsAfterDate,
+    getOperationsBeforeDate
 }

@@ -1,7 +1,7 @@
 import { ref, computed, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import { $api } from '@/services/http'
+import { $http } from '@/services/http'
 
 class User {
     constructor(

@@ -15,6 +15,15 @@
 
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import { useAccountStore, useOpetationStore } from './stores';
+
+const accountStore = useAccountStore()
+const opetationStore = useOpetationStore()
+
+accountStore.getAccounts().then(() => {
+  opetationStore.getOperations()
+})
+
 </script>
 
 <style scoped>
@@ -57,3 +66,4 @@ main#content {
 
 
 </style>
+

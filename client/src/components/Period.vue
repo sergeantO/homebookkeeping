@@ -3,7 +3,8 @@
 </template>
 
 <script lang="ts">
-import { usePeriodStore } from '@/stores/counter';
+
+import { usePeriodStore } from '@/stores';
 import { defineComponent } from 'vue';
 
 const periodStore = usePeriodStore()

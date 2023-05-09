@@ -1,14 +1,18 @@
 <template>
-    <CreateAccount />
+    
     <div class="row my-2">
         <div class="col">
             <h1>Баланс</h1>
+        </div>
+        <div class="col">
             <ActiveOnlyCheckbox />
         </div>
         <div class="col">
             <Period />
         </div>
     </div>
+
+    <CreateAccount />
 
     <div class="row  my-2">
         <div class="col">
@@ -150,46 +154,16 @@
 </template>
 
 <script lang="ts">
-import { useAccountStore, useBalanceStore, useOpetationStore, type IBalanceResult, usePeriodStore } from '@/stores/counter';
 import Period from '@/components/Period.vue';
 import CreateAccount from '@/components/CreateAccount.vue';
 import ActiveOnlyCheckbox from '@/components/ActiveOnlyCheckbox.vue'
 import { Account, AccountTypeEnum } from '@/models';
 import { defineComponent } from 'vue';
+import { useAccountStore, useBalanceStore } from '@/stores';
+import type { IBalanceResult } from '@/stores/balanceStore';
 
 const accountStore = useAccountStore()
-const opetationStore = useOpetationStore()
 const balanceStore = useBalanceStore()
-const periodStore = usePeriodStore()
-
-const profit = accountStore.profit
-const card = accountStore.card
-const family = accountStore.family
-const cash = accountStore.cash
-const vklad = accountStore.vklad
-const misha = accountStore.misha
-const robot = accountStore.robot
-const havka = accountStore.havka
-
-accountStore.addAccount(AccountTypeEnum.CurrentAsset, 'Лекарства')
-accountStore.addAccount(AccountTypeEnum.CurrentAsset, 'Сигареты')
-accountStore.addAccount(AccountTypeEnum.CurrentAsset, 'Крупные покупки')
-accountStore.addAccount(AccountTypeEnum.CurrentAsset, 'Салоны')
-accountStore.addAccount(AccountTypeEnum.CurrentAsset, 'Животне')
-accountStore.addAccount(AccountTypeEnum.CurrentAsset, 'Другие траты')
-
-opetationStore.addOperation('Пришла зп', 50000, profit, card).date = new Date('2023-04-30')
-opetationStore.addOperation('Отложил половину', 25000, card, vklad).date = new Date('2023-04-30')
-
-opetationStore.addOperation('Пришла зп', 50000, profit, card)
-opetationStore.addOperation('Отложил половину', 7500, card, vklad)
-opetationStore.addOperation('Перевел в семейный', 35000, card, family)
-opetationStore.addOperation('Миша оплатил тусу', 1650, misha, card)
-opetationStore.addOperation('Купили робот-пылесос', 30000, family, robot)
-opetationStore.addOperation('Снял дельги с карты 4к', 4000, card, cash)
-opetationStore.addOperation('Отдал  Мишк долг наличкой', 1650, cash, misha)
-opetationStore.addOperation('Зачислил на счет 2к', 2000, cash, card)
-opetationStore.addOperation('Заказали Я.Лавку', 3000, family, havka)
 
 export default defineComponent({
     components: {
@@ -232,19 +206,19 @@ export default defineComponent({
         },
         debts() {
             return this.activeBalance
-                .filter((i) => i.account.type === AccountTypeEnum.Debt)
+                .filter((i: IBalanceResult) => i.account.type === AccountTypeEnum.DEBT)
         },
         fixedAssets() {
             return this.activeBalance
-                .filter(i => i.account.type === AccountTypeEnum.FixedAsset)
+                .filter((i: IBalanceResult) => i.account.type === AccountTypeEnum.FIXED_ASSET)
         },
         ownCapitalAssets() {
             return this.activeBalance
-                .filter(i => i.account.type === AccountTypeEnum.OwnCapital)
+                .filter((i: IBalanceResult) => i.account.type === AccountTypeEnum.OWN_CAPITAL)
         },
         currentAssets() {
             return this.activeBalance
-                .filter(i => i.account.type === AccountTypeEnum.CurrentAsset)
+                .filter((i: IBalanceResult) => i.account.type === AccountTypeEnum.CURRENT_ASSET)
         },
         totalDebits() {
             return this.total(this.debts)
@@ -264,50 +238,4 @@ export default defineComponent({
 </script>
 
 <style>
-.row {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.col {
-    display: flex;
-    flex-direction: column;
-    flex: 1 0 auto;
-    margin: 0 0.5rem;
-}
-
-.my-2 {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.bg-sky {
-    background-color: skyblue;
-    font-weight: bold;
-}
-
-table {
-    width: 100%;
-    border-spacing: 0px;
-}
-
-th,
-td {
-    border-bottom: 1px solid black;
-    padding: 4px 15px;
-    text-align: left;
-}
-
-th {
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.add-button {
-    display: inline-block;
-    margin: .5rem;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-}</style>
+</style>
