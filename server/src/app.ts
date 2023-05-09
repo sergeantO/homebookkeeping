@@ -62,10 +62,6 @@ const distPath = (config.env === 'production')
     : path.resolve(__dirname, '..', '..', 'client', 'dist')
     
 app.use(express.static(distPath));
-app.get('*',  function (request, response) {
-  response.send(path.resolve(distPath, 'index.html'))
-  //response.sendFile(path.resolve(distPath, 'index.html'));
-});
 
 // convert error to ApiError, if needed
 app.use(errorConverter);
