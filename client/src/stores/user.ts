@@ -21,7 +21,7 @@ export const useUserStore = defineStore('user', () => {
 
     const register = (email: string, password: string) => {
         
-        return axios.post(`${API_URL}/v1/auth/register`, {
+        return axios.post(`${API_URL}/auth/register`, {
             email,
             password
         }).then((res) => {
