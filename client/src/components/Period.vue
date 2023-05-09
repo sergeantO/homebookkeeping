@@ -1,5 +1,5 @@
 <template>
-    <input type="month" v-model="period" @change="setData">
+    <input type="month" class="monthWidget" v-model="period" @change="setData">
 </template>
 
 <script lang="ts">
@@ -25,3 +25,10 @@ export default defineComponent({
     }
 })
 </script>
+
+<style scoped>
+.monthWidget {
+    padding: .25rem 1rem;
+    max-width: 250px;
+}
+</style>

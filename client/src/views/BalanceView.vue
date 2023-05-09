@@ -16,6 +16,7 @@
 
     <div class="row  my-2">
         <div class="col">
+            <div class="table-wrapper">
             <table>
                 <thead>
                     <th colspan="2">Актив</th>
@@ -81,11 +82,13 @@
                 </tbody>
 
             </table>
+            </div>
         </div>
 
     </div>
     <div class="row my-2">
         <div class="col">
+            <div class="table-wrapper">
             <table>
                 <thead>
                     <th colspan="2">Пасив</th>
@@ -148,6 +151,7 @@
                 </tbody>
 
             </table>
+            </div>
         </div>
 
     </div>

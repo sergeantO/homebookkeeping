@@ -15,65 +15,72 @@
     <CreateAccount />
 
     <div class="row my-2">
-        <div class="col">
-            <p>Активные счета</p>
-            <ul>
-                <li v-for="acc of activeAccounts" :key="acc.id">
-                    <RouterLink :to="{ name: 'account', params: { id: acc.id } }">{{ acc.name }}</RouterLink>
-                </li>
-            </ul>
-            <hr>
-            <p>Пассивные счета</p>
-            <ul>
-                <li v-for="acc of passiveAccounts" :key="acc.id">
-                    <RouterLink :to="{ name: 'account', params: { id: acc.id } }">{{ acc.name }}</RouterLink>
-                </li>
-            </ul>
+        <div class="col account-menu">
+            <div class="accountList">
+                <h3>Активные счета</h3>
+                <ul>
+                    <li v-for="acc of activeAccounts" :key="acc.id">
+                        <RouterLink :to="{ name: 'account', params: { id: acc.id } }">{{ acc.name }}</RouterLink>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="accountList">
+                <h3>Пассивные счета</h3>
+                <ul>
+                    <li v-for="acc of passiveAccounts" :key="acc.id">
+                        <RouterLink :to="{ name: 'account', params: { id: acc.id } }">{{ acc.name }}</RouterLink>
+                    </li>
+                </ul>
+            </div>
+            
         </div>
 
         <div class="col">
-            <table v-if="acount">
-                <thead>
-                    <th>операция</th>
-                    <th>кор. счет</th>
-                    <th>дебит</th>
-                    <th>кредит</th>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th colspan="2">Начальный остаток</th>
-                        <th>{{ (acount.isAssetAccount) ? balance?.startVal : '' }}</th>
-                        <th>{{ (!acount.isAssetAccount) ? balance?.startVal : '' }}</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button @mouseup="addOperation">+</button>
-                            <input type="text" v-model="name">
-                        </td>
-                        <td>
-                            <SelectedList :select="secondAccount?.id" :options="allAccounts" @select="setSecondAccount"/>
-                        </td>
-                        <td><input type="number" v-model="debit" class="w-100"></td>
-                        <td><input type="number" v-model="credit" class="w-100"></td>
-                    </tr>
-                    <AccountOperation v-for="op in operations" :key="op.id" :operation="op" :account="acount" />
-                    <tr>
-                        <th colspan="2">Оборот</th>
-                        <th>{{ totalDebit }}</th>
-                        <th>{{ totalCredit }}</th>
-                    </tr>
-                    <tr>
-                        <th colspan="2">Итог</th>
-                        <th>{{ (acount.isAssetAccount) ? totalDebit - totalCredit : '' }}</th>
-                        <th>{{ (acount.isAssetAccount) ? '' : totalCredit - totalDebit }}</th>
-                    </tr>
-                    <tr>
-                        <th colspan="2">Итоговый остаток</th>
-                        <th>{{ (acount.isAssetAccount) ?  balance?.endVal : '' }}</th>
-                        <th>{{ (acount.isAssetAccount) ? '' : balance?.endVal }}</th>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table v-if="acount">
+                    <thead>
+                        <th>операция</th>
+                        <th>кор. счет</th>
+                        <th>дебит</th>
+                        <th>кредит</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th colspan="2">Начальный остаток</th>
+                            <th>{{ (acount.isAssetAccount) ? balance?.startVal : '' }}</th>
+                            <th>{{ (!acount.isAssetAccount) ? balance?.startVal : '' }}</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button @mouseup="addOperation">+</button>
+                                <input type="text" v-model="name">
+                            </td>
+                            <td>
+                                <SelectedList :select="secondAccount?.id" :options="allAccounts" @select="setSecondAccount"/>
+                            </td>
+                            <td><input type="number" v-model="debit" class="w-100"></td>
+                            <td><input type="number" v-model="credit" class="w-100"></td>
+                        </tr>
+                        <AccountOperation v-for="op in operations" :key="op.id" :operation="op" :account="acount" />
+                        <tr>
+                            <th colspan="2">Оборот</th>
+                            <th>{{ totalDebit }}</th>
+                            <th>{{ totalCredit }}</th>
+                        </tr>
+                        <tr>
+                            <th colspan="2">Итог</th>
+                            <th>{{ (acount.isAssetAccount) ? totalDebit - totalCredit : '' }}</th>
+                            <th>{{ (acount.isAssetAccount) ? '' : totalCredit - totalDebit }}</th>
+                        </tr>
+                        <tr>
+                            <th colspan="2">Итоговый остаток</th>
+                            <th>{{ (acount.isAssetAccount) ?  balance?.endVal : '' }}</th>
+                            <th>{{ (acount.isAssetAccount) ? '' : balance?.endVal }}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </template>
@@ -169,8 +176,23 @@ export default defineComponent({
 })
 </script>
 
-<style>
-table {
-    width: 100%;
+<style scoped>
+.account-menu {
+    max-width: 200px; 
+    margin-right: 2rem;
+}
+
+.accountList {
+    margin-bottom: 2rem;
+}
+
+.accountList h3 {
+    margin-bottom: .5rem;
+    text-transform: uppercase;
+}
+
+.accountList > ul {
+    list-style: none;
+    padding-left: 0;
 }
 </style>

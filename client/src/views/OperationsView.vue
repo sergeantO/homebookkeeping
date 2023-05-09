@@ -10,6 +10,7 @@
     
     <div class="row my-2">
         <div class="col">
+            <div class="table-wrapper">
             <table>
                 <thead>
                     <th>#</th>
@@ -35,6 +36,7 @@
                     <Operation v-for="op in operations" key="op.id" :operation="op"/>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </template>

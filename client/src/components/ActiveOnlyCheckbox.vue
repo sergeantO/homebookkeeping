@@ -1,7 +1,7 @@
 <template>
     <div>
         <input type="checkbox" name="activeOnlyCheckbox" id="activeOnlyCheckbox" v-model="store.isActiveOnly"> 
-        <label for="activeOnlyCheckbox">Только активные</label>
+        <label for="activeOnlyCheckbox">Только активные счета</label>
     </div>
 </template>
 
@@ -20,3 +20,10 @@ export default defineComponent({
     }
 })
 </script>
+
+<style scoped>
+input[name=activeOnlyCheckbox] {
+    display: inline-block;
+    margin-right: 10px;
+}
+</style>
