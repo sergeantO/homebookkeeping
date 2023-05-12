@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, type NavigationGuardNext, type RouteLocationNormalized } from 'vue-router'
+import { createRouter, createWebHashHistory, type NavigationGuardNext, type RouteLocationNormalized } from 'vue-router'
 
 const ifAuthenticated = (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
   if (localStorage.getItem('accessToken')) {
@@ -15,7 +15,7 @@ const ifAuthenticated = (to: RouteLocationNormalized, from: RouteLocationNormali
 };
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/login',
