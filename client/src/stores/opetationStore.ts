@@ -12,7 +12,7 @@ export const useOpetationStore = defineStore('operation', () => {
     const periodStore = usePeriodStore()
 
     function addOperation(name: string, val: number, creditAccount: Account, debitAccount: Account){
-        return Api.createOperation(name, val, debitAccount.id, creditAccount.id)
+        return Api.createOperation(name, val, creditAccount.id, debitAccount.id)
             .then((res) => {
                 const { id, name, creditAccountId, debitAccountId, value, createdAt } = res.data
                 const op = new Operation( id, name, value, creditAccount, debitAccount, new Date(createdAt) )
@@ -25,8 +25,8 @@ export const useOpetationStore = defineStore('operation', () => {
         const res = await Api.getOperations()
         res.data.forEach((op: any) => {
             const { id, name, creditAccountId, debitAccountId, value, createdAt } = op
-            const creditAccount = accountStore.getAccount(creditAccountId)
-            const debitAccount = accountStore.getAccount(debitAccountId)
+            const creditAccount = accountStore.getAccount(creditAccountId) as Account
+            const debitAccount = accountStore.getAccount(debitAccountId) as Account
             const operation = new Operation( id, name, value, creditAccount, debitAccount, new Date(createdAt) )
             console.log(operation)
             operationList.value.push(operation)

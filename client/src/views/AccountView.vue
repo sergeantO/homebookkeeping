@@ -150,7 +150,7 @@ export default defineComponent({
             }, 0)
         },
         allAccounts() {
-            return accountStore.accountList
+            return accountStore.activeAccounts
         },
         activeAccounts() {
             return accountStore.activeAccounts.filter(i => i.isAssetAccount)
@@ -164,7 +164,7 @@ export default defineComponent({
             this.secondAccount = accountStore.getAccount( accountId )
         },
         addOperation() {
-            if (this.secondAccount) {
+            if (this.secondAccount  && this.acount) {
                 if ( this.debit > 0 ) {
                     opetationStore.addOperation(this.name, this.debit, this.secondAccount, this.acount)
                 } else if ( this.credit > 0 ) {

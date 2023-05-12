@@ -16,6 +16,7 @@
                     <th>#</th>
                     <th>содержание опреации</th>
                     <th>дебит</th>
+                    <th></th>
                     <th>кредит</th>
                     <th>сумма</th>
                     <th>дата</th>
@@ -25,10 +26,13 @@
                         <td><button class="add-button" :disabled="isDisabledAddButton" @mouseup="addOperation">+</button></td>
                         <td><input type="text" v-model="name" class="w-100"></td>
                         <td>
-                            <SelectedList :select="debitAccount?.id" :options="accounts" @select="setDebitAccount"/>
+                            <SelectedList :select="debitAccountId" :options="accounts" @select="setDebitAccountId"/>
                         </td>
                         <td>
-                            <SelectedList :select="creditAccount?.id" :options="accounts" @select="setCreditAccount"/>
+                            <button @click="swapAccounts()">swap</button>
+                        </td>
+                        <td>
+                            <SelectedList :select="creditAccountId" :options="accounts" @select="setCreditAccountId"/>
                         </td>
                         <td><input type="number" v-model="val" class="w-100"></td>
                         <td></td>
@@ -62,8 +66,8 @@ export default defineComponent({
     data() {
         return {
             period: null,
-            debitAccount: undefined as Account | undefined,
-            creditAccount: undefined as Account | undefined,
+            debitAccountId: 0,
+            creditAccountId: 0,
             name: '',
             val: 0,
         }
@@ -73,23 +77,33 @@ export default defineComponent({
             return opetationStore.operationsInPeriod
         },
         accounts() {
-            return accountStore.accountList
+            return accountStore.activeAccounts
+        },
+        creditAccount() {
+            const account = this.creditAccountId
+            return accountStore.getAccount( account )
+        },
+        debitAccount() {
+            const account = this.debitAccountId
+            return accountStore.getAccount( account )
         },
         isDisabledAddButton() {
-            return typeof this.creditAccount === "undefined" 
-                || typeof this.debitAccount === "undefined"
+            return !this.creditAccount
+                || !this.debitAccount
+                || this.creditAccountId === this.debitAccountId
                 || this.val < 1
                 || !this.name
         }
     },
     methods: {
-        setDebitAccount(accountId: number) {
-            this.debitAccount = accountStore.getAccount( accountId )
+        setDebitAccountId(accountId: number) {
+            this.debitAccountId = accountId 
         },
-        setCreditAccount(accountId: number) {
-            this.creditAccount = accountStore.getAccount( accountId )
+        setCreditAccountId(accountId: number) {
+            this.creditAccountId =  accountId 
         },
         addOperation() {
+            
             if (!this.isDisabledAddButton) {
                 opetationStore.addOperation(this.name, this.val, this.creditAccount as Account, this.debitAccount as Account)
                 
@@ -100,6 +114,12 @@ export default defineComponent({
             }
             
         },
+        swapAccounts() {
+            const tmpDeb = this.debitAccountId
+            const tmpCre = this.creditAccountId
+            this.setCreditAccountId(tmpDeb)
+            this.setDebitAccountId(tmpCre)
+        }
         
     }
 })

@@ -12,10 +12,10 @@ export const useAccountStore = defineStore('account', () => {
     const addAccount = async(accountType: AccountTypeEnum, name: string) => {
         const res = await Api.createAccount(name, accountType)
         const { id, type } = res.data 
-        const ac = new Account(id, type, name)
+        const st = String(type) as keyof typeof AccountType
+        const ac = new Account(id, AccountType[st], name)
         accountList.value.push(ac)
         return ac
-            
     }
 
     const getAccounts = async () => {
@@ -29,28 +29,29 @@ export const useAccountStore = defineStore('account', () => {
     }
 
     const getAccount = (id: number) => {
-        return accountList.value.find(i => i.id === id) as Account
+        return accountList.value.find(i => i.id === id)
     }
 
     const isActiveOnly = ref(false)
     
     const activeAccounts = computed(() => {
+        const accounts = accountList.value
+        
         if (isActiveOnly.value) {
             const operationList = opetationStore.operationsInPeriod
-            return accountList.value
-                .filter((account) => {
-                    return operationList.some(op => {
-                        return op.creditAccount.id === account.id
-                            || op.debitAccount.id === account.id
-                    })
+            return accounts.filter((account) => {
+                return operationList.some(op => {
+                    return op.creditAccount.id === account.id
+                        || op.debitAccount.id === account.id
                 })
+            })
         }
     
-        return accountList.value
+        return accounts
     })
 
 
     return { 
-        accountList, isActiveOnly, activeAccounts, addAccount, getAccount, getAccounts
+        isActiveOnly, activeAccounts, addAccount, getAccount, getAccounts
     }
 })

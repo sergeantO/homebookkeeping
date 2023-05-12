@@ -6,6 +6,9 @@
             <RouterLink :to="{ name: 'account', params: { id: operation.debitAccount.id }}">{{ operation.debitAccount.name }}</RouterLink>
         </td>
         <td>
+           
+        </td>
+        <td>
             <RouterLink :to="{ name: 'account', params: { id: operation.creditAccount.id }}">{{ operation.creditAccount.name }}</RouterLink>
         </td>
         <td>{{ operation.val }}</td>

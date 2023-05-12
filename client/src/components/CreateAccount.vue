@@ -36,8 +36,9 @@ export default defineComponent({
             const newAccountType = +this.newAccountType
             const newAccountName = this.newAccountName
             if (newAccountName.length > 0) {
+                this.newAccountName = ''
                 accountStore.addAccount(newAccountType, newAccountName)
-            }
+           }
         },
     }
 })

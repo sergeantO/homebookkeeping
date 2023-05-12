@@ -1,7 +1,13 @@
 <template>
     <select class="form-control w-100" @change="onSelect">
         <option disabled selected value="0">Выберите</option>
-        <option v-for="option in options" v-bind:value="option.id" >{{ option.name }}</option>
+        <option 
+            v-for="option in options" 
+            v-bind:value="option.id" 
+            :selected="option.id === select"
+        >
+            {{ option.name }}
+        </option>
     </select>
 </template>
 

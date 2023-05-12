@@ -11,14 +11,14 @@ datasource db {
 }
 
 model User {
-  id              Int      @id @default(autoincrement())
-  email           String   @unique
+  id              Int         @id @default(autoincrement())
+  email           String      @unique
   name            String?
   password        String
-  role            Role     @default(USER)
-  isEmailVerified Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  role            Role        @default(USER)
+  isEmailVerified Boolean     @default(false)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
   Token           Token[]
   accounts        Account[]
   operations      Operation[] @relation("UserOperations")
@@ -38,12 +38,12 @@ model Token {
 model Account {
   id               Int          @id @default(autoincrement())
   type             AccountType
-  name             String
+  name             String       @unique
   createdAt        DateTime     @default(now())
   users            User[]
   Balances         Balance[]    @relation("AccountBalance")
-  creditOperations Operation[] @relation("CreditAccountOperations")
-  debitOperations  Operation[] @relation("DebitAccountOperations")
+  creditOperations Operation[]  @relation("CreditAccountOperations")
+  debitOperations  Operation[]  @relation("DebitAccountOperations")
 }
 
 model Operation {
