@@ -214,31 +214,35 @@ export default defineComponent({
             return balanceStore.process
         },
         debts() {
-            return this.activeBalance
+            return balanceStore.process
                 .filter((i: IBalanceResult) => i.account.type === AccountTypeEnum.DEBT)
         },
         fixedAssets() {
-            return this.activeBalance
+            return  balanceStore.process
                 .filter((i: IBalanceResult) => i.account.type === AccountTypeEnum.FIXED_ASSET)
         },
         ownCapitalAssets() {
-            return this.activeBalance
+            return  balanceStore.process
                 .filter((i: IBalanceResult) => i.account.type === AccountTypeEnum.OWN_CAPITAL)
         },
         currentAssets() {
-            return this.activeBalance
+            return  balanceStore.process
                 .filter((i: IBalanceResult) => i.account.type === AccountTypeEnum.CURRENT_ASSET)
         },
         totalDebits() {
+            //@ts-ignore компилятор не видит this.debts -_-
             return this.total(this.debts)
         },
         totalFixedAssets() {
+            //@ts-ignore компилятор не видит this.debts -_-
             return this.total(this.fixedAssets)
         },
         totalOwnCapitalAssets() {
+            //@ts-ignore компилятор не видит this.debts -_-
             return this.total(this.ownCapitalAssets)
         },
         totalCurrentAssets() {
+            //@ts-ignore компилятор не видит this.debts -_-
             return this.total(this.currentAssets)
         }
     },
