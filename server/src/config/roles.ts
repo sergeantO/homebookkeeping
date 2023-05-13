@@ -1,7 +1,7 @@
 import { Role } from '@prisma/client';
 
 const allRoles = {
-  [Role.USER]: [],
+  [Role.USER]: ['getUsers'],
   [Role.ADMIN]: ['getUsers', 'manageUsers']
 };
 

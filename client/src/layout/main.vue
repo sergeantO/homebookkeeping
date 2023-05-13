@@ -1,0 +1,101 @@
+<template>
+    <q-layout view="lHh Lpr lFf">
+        <q-drawer :mini="miniState" show-if-above side="left" behavior="desktop" elevated class="bg-primary no-scroll text-white">
+            <header>
+                <q-toolbar>
+                    <q-btn flat dense round @click="toggleLeftDrawer" icon="menu" aria-label="Menu" />
+                    <!-- <q-space /> -->
+                    <q-toolbar-title class="logo">
+                        Микробухгалтерия
+                    </q-toolbar-title>
+                </q-toolbar>
+            </header> 
+           
+            <q-list>
+                <q-item to="/balance" active-class="q-item-no-link-highlighting">
+                    <q-item-section avatar>
+                        <q-icon name="dashboard" />
+                    </q-item-section>
+                    <q-item-section>
+                        <q-item-label>/Баланс</q-item-label>
+                    </q-item-section>
+                </q-item>
+
+                <q-expansion-item icon="pages" label="/Счета">
+                    <q-list class="q-pl-lg">
+                            <q-item v-for="account in accounts" :to="{name: 'account', params: { id: account.id }}" active-class="q-item-no-link-highlighting">
+                            <q-item-section class="q-pl-lg">
+                                /{{account.name}}
+                            </q-item-section>
+                        </q-item>
+                    </q-list>
+                </q-expansion-item>
+
+                <q-item to="/operations" active-class="q-item-no-link-highlighting">
+                    <q-item-section avatar>
+                        <q-icon name="dashboard" />
+                    </q-item-section>
+                    <q-item-section>
+                        <q-item-label>/Операции</q-item-label>
+                    </q-item-section>
+                </q-item>
+            </q-list>
+        </q-drawer>
+
+        <q-page-container class="bg-grey-2">
+            <router-view />
+        </q-page-container>
+
+    </q-layout>
+</template>
+
+<script lang="ts">
+import { useAccountStore, useOpetationStore } from '@/stores'
+import { useQuasar } from 'quasar'
+import { defineComponent, ref } from 'vue'
+
+const miniState = ref(false)
+const $q = useQuasar()
+
+const accountStore = useAccountStore()
+const opetationStore = useOpetationStore()
+accountStore.getAccounts().then(() => {
+    opetationStore.getOperations()
+})
+
+export default defineComponent({
+    name: 'MainLayout',
+
+    components: {
+    },
+
+    setup() {
+        return {
+            $q,
+            miniState,
+            toggleLeftDrawer() {
+                miniState.value = !miniState.value
+            }
+        }
+    },
+
+    computed: {
+        accounts() {
+            return accountStore.activeAccounts
+        }
+    }
+})
+</script>
+
+<style lang="scss" scoped>
+header {
+    border-bottom: 2px solid #fff;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+header .logo {
+    
+}
+</style>

@@ -8,12 +8,12 @@ const router = express.Router();
 
 router
   .route('/operations')
-  .post(dataController.createOperation)
-  .get(dataController.getOperations);
+  .post(auth(), dataController.createOperation)
+  .get(auth(), dataController.getOperations);
 
 router
   .route('/accounts')
-  .post(dataController.createAccount)
-  .get(dataController.getAccountsWithBalance);
+  .post(auth(), dataController.createAccount)
+  .get(auth(), dataController.getAccountsWithBalance);
 
 export default router;

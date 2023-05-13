@@ -1,45 +1,24 @@
 <template>
-  <header>
-      <div class="logo">
-        <h1>Микробугалтерия</h1>
-      </div>
-      
-      <nav>
-        <ul class="menu">
-          <li class="menu-item">
-              <RouterLink to="/balance">Баланс</RouterLink>
-          </li>
-          <li class="menu-item">
-            <RouterLink to="/account/1">Счета</RouterLink>
-          </li>
-          <li class="menu-item">
-            <RouterLink to="/operations">Операции</RouterLink>
-          </li>
-        </ul>
-      </nav>
-  </header>
-
-  <main id="content">
-    <RouterView />
-  </main> 
-  
+  <RouterView />  
 </template>
 
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import { useAccountStore, useOpetationStore } from './stores';
-
-const accountStore = useAccountStore()
-const opetationStore = useOpetationStore()
-
-accountStore.getAccounts().then(() => {
-  opetationStore.getOperations()
-})
-
+import { RouterView } from 'vue-router'
 </script>
 
-<style scoped>
-
-
+<style lang="scss" scoped>
+.example-row-equal-width {
+  .row > div {
+    padding: 10px 15px;
+    background: rgba(#999,.15);
+    border: 1px solid rgba(#999,.2);
+  }
+    
+  .row + .row {
+    margin-top: 1rem;
+  }
+    
+}
+  
 </style>
 

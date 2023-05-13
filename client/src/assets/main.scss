@@ -1,0 +1,26 @@
+$primary   : #00bd7e;
+$secondary : #00bd7e;
+$accent    : #00bd7e;
+
+$dark      : #3e3d3d;
+
+$positive  : #00bd7e;
+$negative  : #ef0038;
+$info      : #31CCEC;
+$warning   : #ff9900;
+
+a {
+    color: $accent;
+}
+
+.q-table th {
+    text-align: left;
+    font-weight: bold !important;
+    text-transform: uppercase;
+}
+
+// @import 'quasar/src/css/index.scss';
+// Import Quasar css
+@import '../../node_modules/quasar/src/css/index.sass'
+
+

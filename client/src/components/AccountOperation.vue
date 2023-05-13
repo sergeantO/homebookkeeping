@@ -8,6 +8,7 @@
         </td>
         <td>{{ debit }}</td>
         <td>{{ credit }}</td>
+        <td>{{ dateFormat }}</td>
     </tr>
 </template>
 
@@ -40,6 +41,10 @@ export default defineComponent({
             return (this.operation.creditAccount.id === this.account.id) 
                 ? this.operation.val
                 : ''
+        },
+        dateFormat() {
+            const date = this.operation.createdAt as Date
+            return date?.toLocaleDateString() || ''
         }
     }
 })

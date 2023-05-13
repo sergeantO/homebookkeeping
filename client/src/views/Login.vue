@@ -1,24 +1,47 @@
 <template>
-    <div class="login-form">
-        <div class="row my-2">
-            <div class="col">
-                <input type="email" placeholder="email" v-model="email">
+    <q-layout class="login-page">
+    <q-page-container>
+      <q-page class="flex bg-image flex-center">
+        <q-card :style="$q.screen.lt.md ? {'width': '75%'} : {'width':'50%'}">
+          <q-card-section>
+            <div class="text-center q-pt-lg">
+              <div class="col text-h6 ellipsis">
+                Log in
+              </div>
             </div>
-        </div>
-        <div class="row my-2">
-            <div class="col">
-                <input type="password" name="" id="" placeholder="password" v-model="password">
-            </div>
-        </div>
-        <div class="row my-2">
-            <div class="col">
-                <button @click="test()">Войти</button>
-            </div>
-            <div class="col">
-                Нет аккаунта? <RouterLink to="/register">Зарегистрироваться</RouterLink>
-            </div>
-        </div>
-    </div>
+          </q-card-section>
+          <q-card-section>
+            <q-form
+              class="q-gutter-md"
+            >
+              <q-input
+                type="email"
+                filled
+                v-model="email"
+                label="Enter e-mail"
+                lazy-rules
+              />
+
+              <q-input
+                type="password"
+                filled
+                v-model="password"
+                label="Enter password"
+                lazy-rules
+              />
+
+              <div>
+                <q-btn label="Login" type="button" color="primary" @click="test()"/>
+              </div>
+              <div>
+                У вас нет аккаунта? <RouterLink to="/register">Регистрация</RouterLink>
+              </div>
+            </q-form>
+          </q-card-section>
+        </q-card>
+      </q-page>
+    </q-page-container>
+  </q-layout>
     
        
 </template>
@@ -26,6 +49,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useUserStore } from '@/stores/user';
+import { RouterLink } from 'vue-router';
 
 const userStore = useUserStore()
 
@@ -35,6 +59,9 @@ export default defineComponent({
             email: '',
             password: '',
         }
+    },
+    components: {
+        RouterLink
     },
     methods: {
         test() {
@@ -48,10 +75,9 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-.login-form {
-    margin: 20vh auto;
-    max-width: 500px;
+<style scoped lang="scss">
+.login-page {
+    background:linear-gradient(to right top, #00bd7e , #39C5D9);
 }
 
 </style>

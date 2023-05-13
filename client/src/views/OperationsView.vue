@@ -1,48 +1,42 @@
 <template>
-    <div class="row my-2">
-        <div class="col">
-            <h1>Операции </h1>
-        </div>
-        <div class="col">
+    <q-page class="q-pa-lg">
+        <div class="row q-mb-md">
+            <div class="col-12">
+                <h3 class="q-mt-none">Операции </h3>
+            </div>
+            <!-- <div class="col">
             <Period />
+        </div> -->
         </div>
-    </div>
-    
-    <div class="row my-2">
-        <div class="col">
-            <div class="table-wrapper">
-            <table>
-                <thead>
-                    <th>#</th>
-                    <th>содержание опреации</th>
-                    <th>дебит</th>
-                    <th></th>
-                    <th>кредит</th>
-                    <th>сумма</th>
-                    <th>дата</th>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><button class="add-button" :disabled="isDisabledAddButton" @mouseup="addOperation">+</button></td>
-                        <td><input type="text" v-model="name" class="w-100"></td>
-                        <td>
-                            <SelectedList :select="debitAccountId" :options="accounts" @select="setDebitAccountId"/>
-                        </td>
-                        <td>
-                            <button @click="swapAccounts()">swap</button>
-                        </td>
-                        <td>
-                            <SelectedList :select="creditAccountId" :options="accounts" @select="setCreditAccountId"/>
-                        </td>
-                        <td><input type="number" v-model="val" class="w-100"></td>
-                        <td></td>
-                    </tr>
-                    <Operation v-for="op in operations" key="op.id" :operation="op"/>
-                </tbody>
-            </table>
+
+        <div class="row">
+            <div class="col-12">
+
+                <q-markup-table>
+                    <thead>
+                        <th>#</th>
+                        <th>содержание опреации</th>
+                        <th>Дебет</th>
+                        <th>кредит</th>
+                        <th style="width: 15%;">сумма</th>
+                        <th>дата</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#</td>
+                            <td><q-input outlined v-model="name" :dense="true" /></td>
+                            <td><q-select outlined v-model="debitAccountData" :options="accounts" /></td>
+                            <td><q-select outlined v-model="creditAccountData" :options="accounts" /></td>
+                            <td><q-input outlined type="number" v-model.number="val" :dense="true" /></td>
+                            <td> <q-btn  :disabled="isDisabledAddButton" @mouseup="addOperation" round outline size="sm" color="primary" icon="done" /></td>
+                        </tr>
+                        <Operation v-for="op in operations" key="op.id" :operation="op" />
+                    </tbody>
+                </q-markup-table>
+
             </div>
         </div>
-    </div>
+    </q-page>
 </template>
 
 <script lang="ts">
@@ -53,6 +47,7 @@ import Period from '@/components/Period.vue';
 import type { Account } from '@/models';
 import { defineComponent } from 'vue';
 import { useAccountStore, useOpetationStore } from '@/stores';
+import { notify } from '@/services/Notify';
 
 const accountStore = useAccountStore()
 const opetationStore = useOpetationStore()
@@ -66,8 +61,8 @@ export default defineComponent({
     data() {
         return {
             period: null,
-            debitAccountId: 0,
-            creditAccountId: 0,
+            debitAccountData: undefined as { label: string, value: number } | undefined,
+            creditAccountData: undefined as { label: string, value: number } | undefined,
             name: '',
             val: 0,
         }
@@ -78,49 +73,43 @@ export default defineComponent({
         },
         accounts() {
             return accountStore.activeAccounts
+                .map((ac) => ({ label: ac.name, value: ac.id }))
         },
         creditAccount() {
-            const account = this.creditAccountId
-            return accountStore.getAccount( account )
+            const accountId = this.creditAccountData?.value
+            if (!accountId) return
+            return accountStore.getAccount(accountId)
         },
         debitAccount() {
-            const account = this.debitAccountId
-            return accountStore.getAccount( account )
+            const accountId = this.debitAccountData?.value
+            if (!accountId) return
+            return accountStore.getAccount(accountId)
         },
         isDisabledAddButton() {
             return !this.creditAccount
                 || !this.debitAccount
-                || this.creditAccountId === this.debitAccountId
+                || this.creditAccount === this.debitAccount
                 || this.val < 1
                 || !this.name
         }
     },
     methods: {
-        setDebitAccountId(accountId: number) {
-            this.debitAccountId = accountId 
-        },
-        setCreditAccountId(accountId: number) {
-            this.creditAccountId =  accountId 
-        },
         addOperation() {
-            
+
             if (!this.isDisabledAddButton) {
                 opetationStore.addOperation(this.name, this.val, this.creditAccount as Account, this.debitAccount as Account)
-                
+                    .then(() => {
+                        notify.success('Операция успешно созданна')
+                    })
+
                 this.name = ''
                 this.val = 0
                 this.creditAccount = undefined
                 this.debitAccount = undefined
             }
-            
+
         },
-        swapAccounts() {
-            const tmpDeb = this.debitAccountId
-            const tmpCre = this.creditAccountId
-            this.setCreditAccountId(tmpDeb)
-            this.setDebitAccountId(tmpCre)
-        }
-        
+
     }
 })
 </script>

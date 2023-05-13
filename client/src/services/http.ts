@@ -1,8 +1,7 @@
 import axios, { type AxiosRequestConfig } from "axios";
+import { notify } from "./Notify";
 
-// "http://localhost:3000/v1"
-// "http://194.67.67.148/v1"
-export const API_URL = "http://194.67.67.148/v1"
+export const API_URL = (import.meta.env.VITE_API_URL)
 
 export const $http = axios.create({
     // withCredentials: true,
@@ -25,20 +24,24 @@ $http.interceptors.response.use(
                 originalRequest._isRetry = true
                 const savedRefreshToken = localStorage.getItem('refreshToken')
                 
-                const response = await axios.post(`${API_URL}/auth/refresh`, null, {
-                    headers: {
-                        'Refresh-token': savedRefreshToken
-                    }
+                const response = await axios.post(`${API_URL}/auth/refresh-tokens`, {
+                    refreshToken: savedRefreshToken
                 })
-                localStorage.setItem('accessToken', response.data.tokens.access.token)
-                localStorage.setItem('refreshToken', response.data.tokens.refresh.token)
+                
+                localStorage.setItem('accessToken', response.data.access.token)
+                localStorage.setItem('refreshToken', response.data.refresh.token)
                
                 return $http.request(originalRequest)
             }
-        } catch (e: any) {
-            localStorage.removeItem('accessToken')
-            localStorage.removeItem('refreshToken')
-            console.log('НЕ АВТОРИВОВАН!!!')
+        } catch (error: any) {
+            if (error.response.status === 401) {
+                localStorage.removeItem('accessToken')
+                localStorage.removeItem('refreshToken')
+                console.log('НЕ АВТОРИВОВАН!!!')
+            } else {
+                notify.error('Что-то пошло не так')
+            }
+           
         }
        
     }

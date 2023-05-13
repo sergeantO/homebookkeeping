@@ -28,7 +28,6 @@ export const useOpetationStore = defineStore('operation', () => {
             const creditAccount = accountStore.getAccount(creditAccountId) as Account
             const debitAccount = accountStore.getAccount(debitAccountId) as Account
             const operation = new Operation( id, name, value, creditAccount, debitAccount, new Date(createdAt) )
-            console.log(operation)
             operationList.value.push(operation)
             return op
         })

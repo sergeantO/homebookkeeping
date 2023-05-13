@@ -1,49 +1,30 @@
 <template>
-    
-    <div class="row my-2">
-        <div class="col">
-            <h1>Счета</h1>
-        </div>
-        <div class="col">
-            <ActiveOnlyCheckbox />
-        </div>
-        <div class="col">
-            <Period />
-        </div>
-    </div>
+    <q-page class="q-pa-lg">
 
-    <CreateAccount />
-
-    <div class="row my-2">
-        <div class="col account-menu">
-            <div class="accountList">
-                <h3>Активные счета</h3>
-                <ul>
-                    <li v-for="acc of activeAccounts" :key="acc.id">
-                        <RouterLink :to="{ name: 'account', params: { id: acc.id } }">{{ acc.name }}</RouterLink>
-                    </li>
-                </ul>
+        <div class="row q-mb-md">
+            <div class="col-12">
+                <h3 class="q-mt-none">{{ acount ? `Счет /${acount.name}` : 'Счета'}}</h3>
             </div>
-            
-            <div class="accountList">
-                <h3>Пассивные счета</h3>
-                <ul>
-                    <li v-for="acc of passiveAccounts" :key="acc.id">
-                        <RouterLink :to="{ name: 'account', params: { id: acc.id } }">{{ acc.name }}</RouterLink>
-                    </li>
-                </ul>
+            <!-- <div class="col">
+                <ActiveOnlyCheckbox />
             </div>
-            
+            <div class="col">
+                <Period />
+            </div> -->
         </div>
 
-        <div class="col">
-            <div class="table-wrapper">
-                <table v-if="acount">
+        <CreateAccount />
+
+        <div class="row">
+            <div class="col-12">
+
+                <q-markup-table v-if="acount">
                     <thead>
                         <th>операция</th>
                         <th>кор. счет</th>
-                        <th>дебит</th>
+                        <th>Дебет</th>
                         <th>кредит</th>
+                        <th>Дата</th>
                     </thead>
                     <tbody>
                         <tr>
@@ -53,14 +34,17 @@
                         </tr>
                         <tr>
                             <td>
-                                <button @mouseup="addOperation">+</button>
-                                <input type="text" v-model="name">
+                                
+                                <q-input outlined v-model="name" :dense="true" />
                             </td>
                             <td>
-                                <SelectedList :select="secondAccount?.id" :options="allAccounts" @select="setSecondAccount"/>
+                                <q-select outlined v-model="secondAccount" :options="allAccounts" />
+                                <!-- <SelectedList :select="secondAccount?.id" :options="allAccounts"
+                                    @select="setSecondAccount" /> -->
                             </td>
-                            <td><input type="number" v-model="debit" class="w-100"></td>
-                            <td><input type="number" v-model="credit" class="w-100"></td>
+                            <td><q-input outlined type="number" v-model.number="debit" class="w-100" :dense="true" /></td>
+                            <td><q-input outlined type="number" v-model.number="credit" class="w-100" :dense="true" /></td>
+                            <td><q-btn  @mouseup="addOperation" round outline size="sm" color="primary" icon="done" /></td>
                         </tr>
                         <AccountOperation v-for="op in operations" :key="op.id" :operation="op" :account="acount" />
                         <tr>
@@ -70,19 +54,20 @@
                         </tr>
                         <tr>
                             <th colspan="2">Итог</th>
-                            <th>{{ (acount.isAssetAccount) ? totalDebit - totalCredit : '' }}</th>
-                            <th>{{ (acount.isAssetAccount) ? '' : totalCredit - totalDebit }}</th>
+                            <th>{{ (acount.isAssetAccount) ? totalDebit - totalCredit : 0 }}</th>
+                            <th>{{ (acount.isAssetAccount) ? 0 : totalCredit - totalDebit }}</th>
                         </tr>
                         <tr>
                             <th colspan="2">Итоговый остаток</th>
-                            <th>{{ (acount.isAssetAccount) ?  balance?.endVal : '' }}</th>
-                            <th>{{ (acount.isAssetAccount) ? '' : balance?.endVal }}</th>
+                            <th>{{ (acount.isAssetAccount) ? balance?.endVal : 0 }}</th>
+                            <th>{{ (acount.isAssetAccount) ? 0 : balance?.endVal }}</th>
                         </tr>
                     </tbody>
-                </table>
+                </q-markup-table>
+
             </div>
         </div>
-    </div>
+    </q-page>
 </template>
 
 <script lang="ts">
@@ -92,8 +77,8 @@ import ActiveOnlyCheckbox from '@/components/ActiveOnlyCheckbox.vue'
 import CreateAccount from '@/components/CreateAccount.vue';
 import Period from '@/components/Period.vue';
 import SelectedList from '@/components/SelectedList.vue';
-import type { Account } from '@/models';
 import { useAccountStore, useOpetationStore, useBalanceStore } from '@/stores';
+import { notify } from '@/services/Notify';
 
 const accountStore = useAccountStore()
 const opetationStore = useOpetationStore()
@@ -112,7 +97,7 @@ export default defineComponent({
             name: '',
             debit: 0,
             credit: 0,
-            secondAccount: undefined as Account | undefined
+            secondAccount: undefined as object | undefined
         }
     },
     computed: {
@@ -151,6 +136,7 @@ export default defineComponent({
         },
         allAccounts() {
             return accountStore.activeAccounts
+                .map((acc) => ({ label: acc.name, value: acc.id }))
         },
         activeAccounts() {
             return accountStore.activeAccounts.filter(i => i.isAssetAccount)
@@ -160,16 +146,23 @@ export default defineComponent({
         },
     },
     methods: {
-        setSecondAccount(accountId: number) {
-            this.secondAccount = accountStore.getAccount( accountId )
-        },
         addOperation() {
-            if (this.secondAccount  && this.acount) {
-                if ( this.debit > 0 ) {
-                    opetationStore.addOperation(this.name, this.debit, this.secondAccount, this.acount)
-                } else if ( this.credit > 0 ) {
-                    opetationStore.addOperation(this.name, this.credit, this.acount, this.secondAccount)
-                }
+            const secondAccountData = this.secondAccount as any
+            if (!secondAccountData) return
+            const secondAccount = accountStore.getAccount(secondAccountData.value)
+            
+            if (!secondAccount || !this.acount) return
+
+            if (this.debit > 0) {
+                opetationStore.addOperation(this.name, this.debit, secondAccount, this.acount)
+                    .then(() => {
+                        notify.success('Операция успешно созданна')
+                    })
+            } else if (this.credit > 0) {
+                opetationStore.addOperation(this.name, this.credit, this.acount, secondAccount)
+                    .then(() => {
+                        notify.success('Операция успешно созданна')
+                    })
             }
         }
     }
@@ -178,7 +171,7 @@ export default defineComponent({
 
 <style scoped>
 .account-menu {
-    max-width: 200px; 
+    max-width: 200px;
     margin-right: 2rem;
 }
 
@@ -191,7 +184,7 @@ export default defineComponent({
     text-transform: uppercase;
 }
 
-.accountList > ul {
+.accountList>ul {
     list-style: none;
     padding-left: 0;
 }
