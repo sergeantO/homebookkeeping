@@ -14,8 +14,8 @@
 
         <CreateAccount />
 
-        <div class="row">
-            <div class="col-lg-6 col-12 q-pb-md q-pr-md">
+        <div class="row q-col-gutter-md">
+            <div class="col-lg-6 col-12">
                 
                     <q-markup-table>
                         <thead class="bg-primary">
@@ -89,7 +89,7 @@
                 
             </div>
 
-            <div class="col-lg-6 col-12 q-pr-md">
+            <div class="col-lg-6 col-12">
                 
                     <q-markup-table>
                         <thead class="bg-primary">
