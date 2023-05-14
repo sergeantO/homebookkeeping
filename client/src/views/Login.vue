@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useUserStore } from '@/stores/user';
+import { useUserStore } from '@/stores/userStore';
 import { RouterLink } from 'vue-router';
 
 const userStore = useUserStore()

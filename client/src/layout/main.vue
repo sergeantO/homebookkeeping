@@ -40,6 +40,18 @@
                     </q-item-section>
                 </q-item>
             </q-list>
+            
+            <div class="absolute-bottom bg-transparent q-pa-lg">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="text-weight-bold">Razvan Stoenescu</div>
+                        <div>@rstoenescu</div>
+                    </div>
+                    <div class="col-4">
+                        <q-btn label="logout" @click="logout" />
+                    </div>
+                </div>
+            </div>
         </q-drawer>
 
         <q-page-container class="bg-grey-2">
@@ -51,12 +63,14 @@
 
 <script lang="ts">
 import { useAccountStore, useOpetationStore } from '@/stores'
+import { useUserStore } from '@/stores/userStore'
 import { useQuasar } from 'quasar'
 import { defineComponent, ref } from 'vue'
 
 const miniState = ref(false)
 const $q = useQuasar()
 
+const userStore = useUserStore()
 const accountStore = useAccountStore()
 const opetationStore = useOpetationStore()
 accountStore.getAccounts().then(() => {
@@ -82,6 +96,12 @@ export default defineComponent({
     computed: {
         accounts() {
             return accountStore.activeAccounts
+        }
+    },
+
+    methods: {
+        logout() {
+            userStore.logout()
         }
     }
 })
