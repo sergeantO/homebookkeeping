@@ -16,148 +16,135 @@
 
         <div class="row q-col-gutter-md">
             <div class="col-lg-6 col-12">
-                
-                    <q-markup-table>
-                        <thead class="bg-primary">
-                            <th colspan="2">Актив</th>
-                            <th>вход</th>
-                            <th>Дебет</th>
-                            <th>кредит</th>
-                            <th>итог</th>
-                            <th>выход</th>
-                        </thead>
-                        <tbody>
-                            <tr class="bg-primary">
-                                <td colspan="2" class="bg-sky">Внеоборотные активы</td>
-                                <td class="bg-sky">{{ totalFixedAssets.startValue }}</td>
-                                <td class="bg-sky">{{ totalFixedAssets.debit }}</td>
-                                <td class="bg-sky">{{ totalFixedAssets.credit }}</td>
-                                <td class="bg-sky">{{ totalFixedAssets.result }}</td>
-                                <td class="bg-sky">{{ totalFixedAssets.endValue }}</td>
-                            </tr>
-                            <tr v-for="balance of fixedAssets" :key="balance.account.id">
-                                <td colspan="2">
-                                    <RouterLink :to="{ name: 'account', params: { id: balance.account.id } }">{{
-                                        balance.account.name
-                                    }}</RouterLink>
-                                </td>
-                                <td class="num">{{ balance.startVal }}</td>
-                                <td class="num">{{ balance.debit }}</td>
-                                <td class="num">{{ balance.credit }}</td>
-                                <td class="num">{{ balance.result }}
-                                    <button v-if="balance.result > 0"
-                                        @click="toLose(balance.account, balance.result)">-></button>
-                                </td>
-                                <td class="num">{{ balance.endVal }}</td>
-                            </tr>
+                <q-markup-table>
+                    <thead>
+                        <th colspan="2">Актив</th>
+                        <th>вход</th>
+                        <th>Дебет</th>
+                        <th>кредит</th>
+                        <th>итог</th>
+                        <th>выход</th>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-primary">
+                            <td colspan="2" class="bg-sky">Внеоборотные активы</td>
+                            <td class="bg-sky">{{ totalFixedAssets.startValue }}</td>
+                            <td class="bg-sky">{{ totalFixedAssets.debit }}</td>
+                            <td class="bg-sky">{{ totalFixedAssets.credit }}</td>
+                            <td class="bg-sky">{{ totalFixedAssets.result }}</td>
+                            <td class="bg-sky">{{ totalFixedAssets.endValue }}</td>
+                        </tr>
+                        <tr v-for="balance of fixedAssets" :key="balance.account.id">
+                            <td colspan="2">
+                                <RouterLink :to="{ name: 'account', params: { id: balance.account.id } }">{{
+                                    balance.account.name
+                                }}</RouterLink>
+                            </td>
+                            <td class="num">{{ balance.startVal }}</td>
+                            <td class="num">{{ balance.debit }}</td>
+                            <td class="num">{{ balance.credit }}</td>
+                            <td class="num">{{ balance.result }}</td>
+                            <td class="num">{{ balance.endVal }}</td>
+                        </tr>
 
-                            <tr class="bg-primary">
-                                <td colspan="2" class="bg-sky">Оборотные активы</td>
-                                <td class="bg-sky">{{ totalCurrentAssets.startValue }}</td>
-                                <td class="bg-sky">{{ totalCurrentAssets.debit }}</td>
-                                <td class="bg-sky">{{ totalCurrentAssets.credit }}</td>
-                                <td class="bg-sky">{{ totalCurrentAssets.result }}</td>
-                                <td class="bg-sky">{{ totalCurrentAssets.endValue }}</td>
-                            </tr>
+                        <tr class="bg-primary">
+                            <td colspan="2" class="bg-sky">Оборотные активы</td>
+                            <td class="bg-sky">{{ totalCurrentAssets.startValue }}</td>
+                            <td class="bg-sky">{{ totalCurrentAssets.debit }}</td>
+                            <td class="bg-sky">{{ totalCurrentAssets.credit }}</td>
+                            <td class="bg-sky">{{ totalCurrentAssets.result }}</td>
+                            <td class="bg-sky">{{ totalCurrentAssets.endValue }}</td>
+                        </tr>
 
-                            <tr v-for="balance of currentAssets">
-                                <td colspan="2">
-                                    <RouterLink :to="{ name: 'account', params: { id: balance.account.id } }">{{
-                                        balance.account.name
-                                    }}</RouterLink>
-                                </td>
-                                <td class="num">{{ balance.startVal }}</td>
-                                <td class="num">{{ balance.debit }}</td>
-                                <td class="num">{{ balance.credit }}</td>
-                                <td class="num">{{ balance.result }}
-                                    <button v-if="balance.result > 0"
-                                        @click="toLose(balance.account, balance.result)">-></button>
-                                </td>
-                                <td class="num">{{ balance.result + balance.startVal }}</td>
-                            </tr>
-                            <tr class="bg-primary">
-                                <td colspan="2" class="bg-sky">Итог по активам</td>
-                                <td class="bg-sky">{{ totalCurrentAssets.startValue + totalFixedAssets.startValue }}</td>
-                                <td class="bg-sky">{{ totalCurrentAssets.debit + totalFixedAssets.debit }}</td>
-                                <td class="bg-sky">{{ totalCurrentAssets.credit + totalFixedAssets.credit }}</td>
-                                <td class="bg-sky">{{ totalCurrentAssets.result + totalFixedAssets.result }}</td>
-                                <td class="bg-sky">{{ totalCurrentAssets.endValue + totalFixedAssets.endValue }}</td>
-                            </tr>
-                        </tbody>
-
-                    </q-markup-table>
-                
+                        <tr v-for="balance of currentAssets">
+                            <td colspan="2">
+                                <RouterLink :to="{ name: 'account', params: { id: balance.account.id } }">{{
+                                    balance.account.name
+                                }}</RouterLink>
+                            </td>
+                            <td class="num">{{ balance.startVal }}</td>
+                            <td class="num">{{ balance.debit }}</td>
+                            <td class="num">{{ balance.credit }}</td>
+                            <td class="num">{{ balance.result }}</td>
+                            <td class="num">{{ balance.result + balance.startVal }}</td>
+                        </tr>
+                        <tr class="bg-primary">
+                            <td colspan="2" class="bg-sky">Итог по активам</td>
+                            <td class="bg-sky">{{ totalCurrentAssets.startValue + totalFixedAssets.startValue }}</td>
+                            <td class="bg-sky">{{ totalCurrentAssets.debit + totalFixedAssets.debit }}</td>
+                            <td class="bg-sky">{{ totalCurrentAssets.credit + totalFixedAssets.credit }}</td>
+                            <td class="bg-sky">{{ totalCurrentAssets.result + totalFixedAssets.result }}</td>
+                            <td class="bg-sky">{{ totalCurrentAssets.endValue + totalFixedAssets.endValue }}</td>
+                        </tr>
+                    </tbody>
+                </q-markup-table>
             </div>
 
             <div class="col-lg-6 col-12">
-                
-                    <q-markup-table>
-                        <thead class="bg-primary">
-                            <th colspan="2">Пасив</th>
-                            <th>вход</th>
-                            <th>Дебет</th>
-                            <th>кредит</th>
-                            <th>итог</th>
-                            <th>выход</th>
-                        </thead>
-                        <tbody>
-                            <tr class="bg-primary">
-                                <td colspan="2" class="bg-sky">Собственный капитал</td>
-                                <td class="bg-sky">{{ totalOwnCapitalAssets.startValue }}</td>
-                                <td class="bg-sky">{{ totalOwnCapitalAssets.debit }}</td>
-                                <td class="bg-sky">{{ totalOwnCapitalAssets.credit }}</td>
-                                <td class="bg-sky">{{ totalOwnCapitalAssets.result }}</td>
-                                <td class="bg-sky">{{ totalOwnCapitalAssets.endValue }}</td>
-                            </tr>
-                            <tr v-for="balance of ownCapitalAssets">
-                                <td colspan="2">
-                                    <RouterLink :to="{ name: 'account', params: { id: balance.account.id } }">{{
-                                        balance.account.name
-                                    }}</RouterLink>
-                                </td>
-                                <td class="num">{{ balance.startVal }}</td>
-                                <td class="num">{{ balance.debit }}</td>
-                                <td class="num">{{ balance.credit }}</td>
-                                <td class="num">{{ balance.result }}</td>
-                                <td class="num">{{ balance.result + balance.startVal }}</td>
-                            </tr>
+                <q-markup-table>
+                    <thead class="bg-primary">
+                        <th colspan="2">Пасив</th>
+                        <th>вход</th>
+                        <th>Дебет</th>
+                        <th>кредит</th>
+                        <th>итог</th>
+                        <th>выход</th>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-primary">
+                            <td colspan="2" class="bg-sky">Собственный капитал</td>
+                            <td class="bg-sky">{{ totalOwnCapitalAssets.startValue }}</td>
+                            <td class="bg-sky">{{ totalOwnCapitalAssets.debit }}</td>
+                            <td class="bg-sky">{{ totalOwnCapitalAssets.credit }}</td>
+                            <td class="bg-sky">{{ totalOwnCapitalAssets.result }}</td>
+                            <td class="bg-sky">{{ totalOwnCapitalAssets.endValue }}</td>
+                        </tr>
+                        <tr v-for="balance of ownCapitalAssets">
+                            <td colspan="2">
+                                <RouterLink :to="{ name: 'account', params: { id: balance.account.id } }">{{
+                                    balance.account.name
+                                }}</RouterLink>
+                            </td>
+                            <td class="num">{{ balance.startVal }}</td>
+                            <td class="num">{{ balance.debit }}</td>
+                            <td class="num">{{ balance.credit }}</td>
+                            <td class="num">{{ balance.result }}</td>
+                            <td class="num">{{ balance.result + balance.startVal }}</td>
+                        </tr>
 
-                            <tr class="bg-primary">
-                                <td colspan="2" class="bg-sky">Долги</td>
-                                <td class="bg-sky">{{ totalDebits.startValue }}</td>
-                                <td class="bg-sky">{{ totalDebits.debit }}</td>
-                                <td class="bg-sky">{{ totalDebits.credit }}</td>
-                                <td class="bg-sky">{{ totalDebits.result }}</td>
-                                <td class="bg-sky">{{ totalDebits.endValue }}</td>
-                            </tr>
-                            <tr v-for="balance of debts">
-                                <td colspan="2">
-                                    <RouterLink :to="{ name: 'account', params: { id: balance.account.id } }">{{
-                                        balance.account.name
-                                    }}</RouterLink>
-                                </td>
-                                <td class="num">{{ balance.startVal }}</td>
-                                <td class="num">{{ balance.debit }}</td>
-                                <td class="num">{{ balance.credit }}</td>
-                                <td class="num">{{ balance.result }}</td>
-                                <td class="num">{{ balance.result + balance.startVal }}</td>
-                            </tr>
-                            <tr class="bg-primary">
-                                <td colspan="2" class="bg-sky">
-                                    Итоги по пассивам
-                                </td>
-                                <td class="bg-sky">{{ totalDebits.startValue + totalOwnCapitalAssets.startValue }}</td>
-                                <td class="bg-sky">{{ totalDebits.debit + totalOwnCapitalAssets.debit }}</td>
-                                <td class="bg-sky">{{ totalDebits.credit + totalOwnCapitalAssets.credit }}</td>
-                                <td class="bg-sky">{{ totalDebits.result + totalOwnCapitalAssets.result }}</td>
-                                <td class="bg-sky">{{ totalDebits.endValue + totalOwnCapitalAssets.endValue }}</td>
-                            </tr>
-                        </tbody>
-
-                    </q-markup-table>
-                
+                        <tr class="bg-primary">
+                            <td colspan="2" class="bg-sky">Долги</td>
+                            <td class="bg-sky">{{ totalDebits.startValue }}</td>
+                            <td class="bg-sky">{{ totalDebits.debit }}</td>
+                            <td class="bg-sky">{{ totalDebits.credit }}</td>
+                            <td class="bg-sky">{{ totalDebits.result }}</td>
+                            <td class="bg-sky">{{ totalDebits.endValue }}</td>
+                        </tr>
+                        <tr v-for="balance of debts">
+                            <td colspan="2">
+                                <RouterLink :to="{ name: 'account', params: { id: balance.account.id } }">{{
+                                    balance.account.name
+                                }}</RouterLink>
+                            </td>
+                            <td class="num">{{ balance.startVal }}</td>
+                            <td class="num">{{ balance.debit }}</td>
+                            <td class="num">{{ balance.credit }}</td>
+                            <td class="num">{{ balance.result }}</td>
+                            <td class="num">{{ balance.result + balance.startVal }}</td>
+                        </tr>
+                        <tr class="bg-primary">
+                            <td colspan="2" class="bg-sky">
+                                Итоги по пассивам
+                            </td>
+                            <td class="bg-sky">{{ totalDebits.startValue + totalOwnCapitalAssets.startValue }}</td>
+                            <td class="bg-sky">{{ totalDebits.debit + totalOwnCapitalAssets.debit }}</td>
+                            <td class="bg-sky">{{ totalDebits.credit + totalOwnCapitalAssets.credit }}</td>
+                            <td class="bg-sky">{{ totalDebits.result + totalOwnCapitalAssets.result }}</td>
+                            <td class="bg-sky">{{ totalDebits.endValue + totalOwnCapitalAssets.endValue }}</td>
+                        </tr>
+                    </tbody>
+                </q-markup-table>
             </div>
-
         </div>
     </q-page>
 </template>
@@ -193,9 +180,6 @@ export default defineComponent({
             if (newAccountName.length > 0) {
                 accountStore.addAccount(newAccountType, newAccountName)
             }
-        },
-        toLose(account: Account, sum: number) {
-            balanceStore.toLose(account, sum)
         },
         total(balances: IBalanceResult[]) {
             return balances.reduce((acc, i) => {

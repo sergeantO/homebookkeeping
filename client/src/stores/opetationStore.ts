@@ -25,11 +25,13 @@ export const useOpetationStore = defineStore('operation', () => {
         const res = await Api.getOperations()
         res.data.forEach((op: any) => {
             const { id, name, creditAccountId, debitAccountId, value, createdAt } = op
-            const creditAccount = accountStore.getAccount(creditAccountId) as Account
-            const debitAccount = accountStore.getAccount(debitAccountId) as Account
-            const operation = new Operation( id, name, value, creditAccount, debitAccount, new Date(createdAt) )
-            operationList.value.push(operation)
-            return op
+            const findedOp = operationList.value.find((o) => o.id === id)
+            if (!findedOp) {
+                const creditAccount = accountStore.getAccount(creditAccountId) as Account
+                const debitAccount = accountStore.getAccount(debitAccountId) as Account
+                const operation = new Operation( id, name, value, creditAccount, debitAccount, new Date(createdAt) )
+                operationList.value.push(operation)
+            }
         })
     }
 

@@ -45,13 +45,8 @@ export const useBalanceStore = defineStore('balance', () => {
         return result
     })
 
-    function toLose(creditAccount: Account, sum: number, date = new Date()) {
-        // const profitAccount = accountStore.profit
-        // opetationStore.addOperation('Списание', sum, creditAccount, profitAccount, date)
-    }
-
     return {
-        toLose, process,
+        process,
     }
 })
 

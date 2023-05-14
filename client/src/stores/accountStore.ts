@@ -22,9 +22,12 @@ export const useAccountStore = defineStore('account', () => {
         const res = await Api.getAccounts()
         res.data.forEach((ac: any) => {
             const { id, type, name } = ac 
-            const st = String(type) as keyof typeof AccountType
-            const account = new Account(id, AccountType[st], name)
-            accountList.value.push(account)
+            const findedAcc = accountList.value.find((acc) => acc.id === id)
+            if (!findedAcc) {
+                const st = String(type) as keyof typeof AccountType
+                const account = new Account(id, AccountType[st], name)
+                accountList.value.push(account)
+            }
         })
     }
 

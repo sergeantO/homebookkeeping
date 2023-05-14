@@ -33,15 +33,8 @@
                             <th>{{ (!acount.isAssetAccount) ? balance?.startVal : '' }}</th>
                         </tr>
                         <tr>
-                            <td>
-                                
-                                <q-input outlined v-model="name" :dense="true" />
-                            </td>
-                            <td>
-                                <q-select outlined v-model="secondAccount" :options="allAccounts" />
-                                <!-- <SelectedList :select="secondAccount?.id" :options="allAccounts"
-                                    @select="setSecondAccount" /> -->
-                            </td>
+                            <td><q-input outlined v-model="name" :dense="true" /></td>
+                            <td><q-select outlined v-model="secondAccount" :options="allAccounts" /></td>
                             <td><q-input outlined type="number" v-model.number="debit" class="w-100" :dense="true" /></td>
                             <td><q-input outlined type="number" v-model.number="credit" class="w-100" :dense="true" /></td>
                             <td><q-btn  @mouseup="addOperation" round outline size="sm" color="primary" icon="done" /></td>
