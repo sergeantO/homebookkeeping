@@ -42,7 +42,7 @@
             </q-list>
             
             <div class="absolute-bottom bg-transparent q-pa-lg">
-                <div v-if="miniState" class="row">
+                <div v-if="!miniState" class="row">
                     <div class="col-8">
                         <div class="text-weight-bold">Razvan Stoenescu</div>
                         <div>@rstoenescu</div>
