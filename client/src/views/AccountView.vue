@@ -1,8 +1,11 @@
 <template>
     <q-page class="q-pa-lg">
-        <div class="row q-mb-md">
-            <div class="col-12">
-                <h3 class="q-mt-none q-mb-md">{{ acount ? `Счет / ${acount.name}` : 'Счета'}}</h3>
+        <div class="row q-mb-lg justify-between items-center">
+            <div>
+                <h3 class="q-my-none">{{ acount ? `Счет /${acount.name}` : '/Счета'}}</h3>
+            </div>
+            <div>
+                <CreateAccount />
             </div>
             <!-- <div class="col">
                 <ActiveOnlyCheckbox />
@@ -12,11 +15,8 @@
             </div> -->
         </div>
 
-        <CreateAccount />
-
         <div class="row">
             <div class="col-12">
-
                 <q-markup-table v-if="acount">
                     <thead>
                         <th>операция</th>
@@ -27,17 +27,19 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <th colspan="2">Начальный остаток</th>
-                            <th>{{ (acount.isAssetAccount) ? balance?.startVal : '' }}</th>
-                            <th>{{ (!acount.isAssetAccount) ? balance?.startVal : '' }}</th>
-                        </tr>
-                        <tr>
                             <td><q-input outlined v-model="name" :dense="true" /></td>
-                            <td><q-select outlined v-model="secondAccount" :options="allAccounts" /></td>
+                            <td><q-select outlined v-model="secondAccount" :options="allAccounts" :dense="true" /></td>
                             <td><q-input outlined type="number" v-model.number="debit" class="w-100" :dense="true" /></td>
                             <td><q-input outlined type="number" v-model.number="credit" class="w-100" :dense="true" /></td>
                             <td><q-btn  @mouseup="addOperation" round outline size="sm" color="primary" icon="done" /></td>
                         </tr>
+
+                        <tr>
+                            <th colspan="2">Начальный остаток</th>
+                            <th>{{ (acount.isAssetAccount) ? balance?.startVal : '' }}</th>
+                            <th>{{ (!acount.isAssetAccount) ? balance?.startVal : '' }}</th>
+                        </tr>
+                        
                         <AccountOperation v-for="op in operations" :key="op.id" :operation="op" :account="acount" />
                         <tr>
                             <th colspan="2">Оборот</th>

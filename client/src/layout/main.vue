@@ -1,7 +1,7 @@
 <template>
     <q-layout view="lHh Lpr lFf">
         <q-drawer :mini="miniState" show-if-above side="left" behavior="desktop" elevated class="bg-primary no-scroll text-white">
-            <header>
+            <header class="q-my-md">
                 <q-toolbar>
                     <q-btn flat dense round @click="toggleLeftDrawer" icon="menu" aria-label="Menu" />
                     <q-toolbar-title class="logo">
@@ -9,22 +9,24 @@
                     </q-toolbar-title>
                 </q-toolbar>
             </header> 
+
+            <q-separator color="white" />
            
-            <q-list>
+            <q-list class="q-mt-md">
                 <q-item to="/balance" active-class="q-item-no-link-highlighting">
                     <q-item-section avatar>
                         <q-icon name="dashboard" />
                     </q-item-section>
                     <q-item-section>
-                        <q-item-label>/ Баланс</q-item-label>
+                        <q-item-label>/Баланс</q-item-label>
                     </q-item-section>
                 </q-item>
 
-                <q-expansion-item icon="pages" label="/ Счета">
+                <q-expansion-item icon="pages" label="/Счета">
                     <q-list class="q-pl-lg">
                             <q-item v-for="account in accounts" :to="{name: 'account', params: { id: account.id }}" active-class="q-item-no-link-highlighting">
                             <q-item-section class="q-pl-lg">
-                                / {{account.name}}
+                                /{{account.name}}
                             </q-item-section>
                         </q-item>
                     </q-list>
@@ -35,13 +37,14 @@
                         <q-icon name="dashboard" />
                     </q-item-section>
                     <q-item-section>
-                        <q-item-label>/ Операции</q-item-label>
+                        <q-item-label>/Операции</q-item-label>
                     </q-item-section>
                 </q-item>
             </q-list>
             
-            <div class="absolute-bottom bg-transparent q-pa-lg">
-                <div v-if="!miniState" class="row">
+            <div class="absolute-bottom bg-transparent">
+                <q-separator color="white" />
+                <div v-if="!miniState" class="row q-ma-lg">
                     <div class="col-8">
                         <div class="text-weight-bold">Razvan Stoenescu</div>
                         <div>@rstoenescu</div>
@@ -107,14 +110,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-header {
-    border-bottom: 2px solid #fff;
-    margin-bottom: 1rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-}
 
-header .logo {
-    
-}
 </style>

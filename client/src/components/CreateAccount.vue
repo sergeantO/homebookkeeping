@@ -1,5 +1,5 @@
 <template>
-    <button @mouseup="show">Создать новый счет</button>
+    <q-btn outline color="primary" @mouseup="show" label="Новый счет" />
 
     <q-dialog ref="dialog" @hide="onDialogHide">
         <q-card class="q-dialog-plugin">

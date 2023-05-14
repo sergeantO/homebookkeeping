@@ -23,7 +23,7 @@ app.use(Quasar, {
         brand: {
           primary: '#00bd7e',
           secondary: '#00bd7e',
-          accent: '#007b53',
+          accent: '#00bd7e',
     
           dark: '#3e3d3d',
           'dark-page': '#121212',

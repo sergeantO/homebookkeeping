@@ -1,5 +1,4 @@
 import { createRouter, createWebHashHistory, type NavigationGuardNext, type RouteLocationNormalized } from 'vue-router'
-import { useAccountStore, useOpetationStore } from '../stores';
 import { tokens } from '@/services/tokens';
 
 const ifAuthenticated = (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
@@ -23,9 +22,9 @@ const router = createRouter({
       path: '/',
       component: () => import('../layout/main.vue'),
       children: [
-        { path: '', component: () => import('../views/TestView.vue') },
         {
           path: '/balance',
+          alias: ['/'],
           name: 'balance',
           component: () => import('../views/BalanceView.vue'),
           beforeEnter: ifAuthenticated
