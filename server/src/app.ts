@@ -21,11 +21,11 @@ if (config.env !== 'test') {
   app.use(morgan.errorHandler);
 }
 
-const distPath = (config.env === 'production') 
-    ? path.resolve(__dirname, '..', '..', '..', 'client', 'dist')
-    : path.resolve(__dirname, '..', '..', 'client', 'dist')
+// const distPath = (config.env === 'production') 
+//    ? path.resolve(__dirname, '..', '..', '..', 'client', 'dist')
+//    : path.resolve(__dirname, '..', '..', 'client', 'dist')
     
-app.use(express.static(distPath));
+// app.use(express.static(distPath));
 
 // set security HTTP headers
 app.use(helmet());
