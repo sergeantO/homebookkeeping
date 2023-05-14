@@ -26,7 +26,7 @@
                         <th>выход</th>
                     </thead>
                     <tbody>
-                        <tr class="bg-primary">
+                        <tr class="bg-accent">
                             <td colspan="2" class="bg-sky">Внеоборотные активы</td>
                             <td class="bg-sky">{{ totalFixedAssets.startValue }}</td>
                             <td class="bg-sky">{{ totalFixedAssets.debit }}</td>
@@ -47,7 +47,7 @@
                             <td class="num">{{ balance.endVal }}</td>
                         </tr>
 
-                        <tr class="bg-primary">
+                        <tr class="bg-accent">
                             <td colspan="2" class="bg-sky">Оборотные активы</td>
                             <td class="bg-sky">{{ totalCurrentAssets.startValue }}</td>
                             <td class="bg-sky">{{ totalCurrentAssets.debit }}</td>
@@ -68,7 +68,7 @@
                             <td class="num">{{ balance.result }}</td>
                             <td class="num">{{ balance.result + balance.startVal }}</td>
                         </tr>
-                        <tr class="bg-primary">
+                        <tr class="bg-accent">
                             <td colspan="2" class="bg-sky">Итог по активам</td>
                             <td class="bg-sky">{{ totalCurrentAssets.startValue + totalFixedAssets.startValue }}</td>
                             <td class="bg-sky">{{ totalCurrentAssets.debit + totalFixedAssets.debit }}</td>
@@ -82,7 +82,7 @@
 
             <div class="col-lg-6 col-12">
                 <q-markup-table>
-                    <thead class="bg-primary">
+                    <thead>
                         <th colspan="2">Пасив</th>
                         <th>вход</th>
                         <th>Дебет</th>
@@ -91,7 +91,7 @@
                         <th>выход</th>
                     </thead>
                     <tbody>
-                        <tr class="bg-primary">
+                        <tr class="bg-accent">
                             <td colspan="2" class="bg-sky">Собственный капитал</td>
                             <td class="bg-sky">{{ totalOwnCapitalAssets.startValue }}</td>
                             <td class="bg-sky">{{ totalOwnCapitalAssets.debit }}</td>
@@ -112,7 +112,7 @@
                             <td class="num">{{ balance.result + balance.startVal }}</td>
                         </tr>
 
-                        <tr class="bg-primary">
+                        <tr class="bg-accent">
                             <td colspan="2" class="bg-sky">Долги</td>
                             <td class="bg-sky">{{ totalDebits.startValue }}</td>
                             <td class="bg-sky">{{ totalDebits.debit }}</td>
@@ -132,7 +132,7 @@
                             <td class="num">{{ balance.result }}</td>
                             <td class="num">{{ balance.result + balance.startVal }}</td>
                         </tr>
-                        <tr class="bg-primary">
+                        <tr class="bg-accent">
                             <td colspan="2" class="bg-sky">
                                 Итоги по пассивам
                             </td>

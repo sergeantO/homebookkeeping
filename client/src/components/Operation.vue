@@ -1,5 +1,5 @@
 <template>
-    <tr :class="{ selected: operId === operation.id }">
+    <tr :class="{ 'bg-accent': operId === operation.id }">
         <td>{{ operation.id }}</td>
         <td>{{ operation.name }}</td>
         <td>
