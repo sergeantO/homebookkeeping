@@ -1,9 +1,8 @@
 <template>
     <q-page class="q-pa-lg">
-
         <div class="row q-mb-md">
             <div class="col-12">
-                <h3 class="q-mt-none">{{ acount ? `Счет /${acount.name}` : 'Счета'}}</h3>
+                <h3 class="q-mt-none q-mb-md">{{ acount ? `Счет / ${acount.name}` : 'Счета'}}</h3>
             </div>
             <!-- <div class="col">
                 <ActiveOnlyCheckbox />

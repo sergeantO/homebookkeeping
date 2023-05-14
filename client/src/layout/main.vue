@@ -4,7 +4,6 @@
             <header>
                 <q-toolbar>
                     <q-btn flat dense round @click="toggleLeftDrawer" icon="menu" aria-label="Menu" />
-                    <!-- <q-space /> -->
                     <q-toolbar-title class="logo">
                         Микробухгалтерия
                     </q-toolbar-title>
@@ -17,15 +16,15 @@
                         <q-icon name="dashboard" />
                     </q-item-section>
                     <q-item-section>
-                        <q-item-label>/Баланс</q-item-label>
+                        <q-item-label>/ Баланс</q-item-label>
                     </q-item-section>
                 </q-item>
 
-                <q-expansion-item icon="pages" label="/Счета">
+                <q-expansion-item icon="pages" label="/ Счета">
                     <q-list class="q-pl-lg">
                             <q-item v-for="account in accounts" :to="{name: 'account', params: { id: account.id }}" active-class="q-item-no-link-highlighting">
                             <q-item-section class="q-pl-lg">
-                                /{{account.name}}
+                                / {{account.name}}
                             </q-item-section>
                         </q-item>
                     </q-list>
@@ -36,7 +35,7 @@
                         <q-icon name="dashboard" />
                     </q-item-section>
                     <q-item-section>
-                        <q-item-label>/Операции</q-item-label>
+                        <q-item-label>/ Операции</q-item-label>
                     </q-item-section>
                 </q-item>
             </q-list>
@@ -48,7 +47,7 @@
                         <div>@rstoenescu</div>
                     </div>
                     <div class="col-4">
-                        <q-btn label="logout" @click="logout" />
+                        <q-btn outline  color="white" text-color="white" label="logout" @click="logout" />
                     </div>
                 </div>
             </div>

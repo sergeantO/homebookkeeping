@@ -2,7 +2,7 @@
     <q-page class="q-pa-lg">
         <div class="row q-mb-md">
             <div class="col-12">
-                <h3 class="q-mt-none">Операции </h3>
+                <h3 class="q-mt-none q-mb-md">Операции </h3>
             </div>
             <!-- <div class="col">
             <Period />
