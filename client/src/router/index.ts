@@ -1,8 +1,8 @@
 import { createRouter, createWebHashHistory, type NavigationGuardNext, type RouteLocationNormalized } from 'vue-router'
-import { tokens } from '@/services/tokens';
+import { userInfo } from '@/services/userInfo';
 
 const ifAuthenticated = (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-  if ( tokens.getAccess() ) {
+  if ( userInfo.getAccess() ) {
     next();
     return;
   }

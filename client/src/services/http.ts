@@ -1,7 +1,7 @@
 import axios, { type AxiosRequestConfig } from "axios";
 import { notify } from "./Notify";
 import router from "@/router";
-import { tokens } from "./tokens";
+import { userInfo } from "./userInfo";
 
 export const API_URL = (import.meta.env.VITE_API_URL)
 
@@ -11,7 +11,7 @@ export const $http = axios.create({
 })
 
 $http.interceptors.request.use(config => {
-    const savedAccessToken = tokens.getAccess()
+    const savedAccessToken = userInfo.getAccess()
     config.headers.Authorization = `Bearer ${savedAccessToken}`
     return config
 })
@@ -24,7 +24,7 @@ $http.interceptors.response.use(
             
             if (error.response.status === 401 && !originalRequest._isRetry) {
                 originalRequest._isRetry = true
-                const savedRefreshToken = tokens.getRefresh()
+                const savedRefreshToken = userInfo.getRefresh()
                 
                 const response = await axios.post(`${API_URL}/auth/refresh-tokens`, {
                     refreshToken: savedRefreshToken
@@ -32,13 +32,13 @@ $http.interceptors.response.use(
 
                 const accessToken = response.data.access.token
                 const refreshToken = response.data.refresh.token
-                tokens.set(accessToken, refreshToken)
+                userInfo.setTokens(accessToken, refreshToken)
                
                 return $http.request(originalRequest)
             }
         } catch (error: any) {
             if (error.response.status === 401) {
-                tokens.clear()
+                userInfo.clearTokens()
                 router.push('/login')
             } else {
                 notify.error('Что-то пошло не так')

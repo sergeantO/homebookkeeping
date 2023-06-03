@@ -12,6 +12,7 @@
                     </q-card-section>
                     <q-card-section>
                         <q-form class="q-gutter-md">
+                            <q-input type="text" filled v-model="name" label="Введите имя" lazy-rules />
                             <q-input type="email" filled v-model="email" label="Введите e-mail" lazy-rules />
                             <q-input type="password" filled v-model="password" label="Введите пароль" lazy-rules />
                             <q-input type="password" filled v-model="passwordConfirm" label="Повторите пароль" lazy-rules />
@@ -38,15 +39,25 @@ export default defineComponent({
         return {
             email: '',
             password: '',
-            passwordConfirm: ''
+            passwordConfirm: '',
+            name: '',
         }
     },
     methods: {
         registerHandler() {
             const email = this.email
             const password = this.password
+            const name = this.name
             if(this.passwordConfirm === password) {
-                userStore.register(email, password)
+                userStore.register(email, password, name)
+                    .then(() => {
+                        this.$router.replace('balance')
+                    })
+                    .catch(({ response }) => {
+                        if (response?.data?.message) {
+                            notify.error(response.data.message)
+                        }
+                    })
             } else {
                 notify.error('пароль не пароль')
             }

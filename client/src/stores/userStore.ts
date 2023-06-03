@@ -2,36 +2,26 @@ import { ref, computed, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { API_URL } from '@/services/http'
-import { tokens } from '@/services/tokens'
-import router from '@/router'
-
-class User {
-    constructor(
-        public email: string,
-        public id: number,
-        public isEmailVerified: boolean,
-        public name: string,
-        public role: string,
-    ) {}
-}
+import { userInfo, type IUser } from '@/services/userInfo'
 
 export const useUserStore = defineStore('user', () => {
-    const user = ref(null) as Ref<User | null>
-    const savedAccessToken = tokens.getAccess()
-    const savedRefreshToken = tokens.getRefresh()
+    const user = ref(userInfo.getUser()) as Ref<IUser | null>
+    const savedAccessToken = userInfo.getAccess()
+    const savedRefreshToken = userInfo.getRefresh()
     const refreshToken = ref(savedRefreshToken)
     const accessToken = ref(savedAccessToken)
 
-    const register = (email: string, password: string) => {
+    const register = (email: string, password: string, name: string) => {
         
-        return axios.post(`${API_URL}/auth/register`, { email, password })
+        return axios.post(`${API_URL}/auth/register`, { email, password, name })
             .then((res) => {
-                const { email, id, isEmailVerified, name, role  } = res.data.user
-                user.value = new User( email, id, isEmailVerified, name, role)
+                const { user, access, refresh } = res.data
                 
-                const accessToken = res.data.access.token
-                const refreshToken = res.data.refresh.token
-                tokens.set(accessToken, refreshToken)
+                const accessToken = access.token
+                const refreshToken = refresh.token
+                userInfo.setTokens(accessToken, refreshToken)
+                userInfo.setUser(user)
+                user.value = user
                 accessToken.value = accessToken
                 refreshToken.value = refreshToken
                 
@@ -44,25 +34,22 @@ export const useUserStore = defineStore('user', () => {
         return axios.post(`${API_URL}/auth/login`, { email, password })
             .then((res) => {
                 const { user, tokens: { access, refresh } } = res.data
-                tokens.set(access.token, refresh.token)
+                
+                userInfo.setUser(user)
+                userInfo.setTokens(access.token, refresh.token)
+                user.value = user
                 accessToken.value = access.token
                 refreshToken.value = refresh.token
-
-                const { email, id, isEmailVerified, name, role  } = user
-                user.value = new User( email, id, isEmailVerified, name, role)
                 
                 return true
-
             })
     }
 
     const logout = () => {
-        return axios.post(`${API_URL}/auth/logout`, {
-            refreshToken: refreshToken.value
-        })
+        return axios.post(`${API_URL}/auth/logout`, { refreshToken: refreshToken.value })
             .then((res) => {
-                tokens.clear()
-                router.push('/login')
+                userInfo.clearAll()
+                return true
             })
         
     }

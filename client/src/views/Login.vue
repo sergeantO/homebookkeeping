@@ -34,6 +34,7 @@
 import { defineComponent } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import { RouterLink } from 'vue-router';
+import { notify } from '@/services/Notify';
 
 const userStore = useUserStore()
 
@@ -51,9 +52,15 @@ export default defineComponent({
         loginHandler() {
             const email = this.email
             const password = this.password
-            userStore.login(email, password).then(() => {
-                this.$router.replace('balance')
-            })
+            userStore.login(email, password)
+                .then(() => {
+                    this.$router.replace('balance')
+                })
+                .catch(({ response }) => {
+                    notify.error(response.data.message)
+                    this.email = ''
+                    this.password = ''
+                })
         }
     },
 })

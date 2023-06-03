@@ -1,30 +1,33 @@
 import { defineStore } from "pinia"
 import { ref, computed } from "vue"
+import { date } from 'quasar'
+
+const currDate = new Date()
+const currMonth = currDate.getMonth()
+const currYear = currDate.getFullYear()
+const defaultFrom = new Date(currYear, currMonth)
+const defaultTo = date.subtractFromDate( new Date(currYear, currMonth + 1), { day: 1 })
 
 export const usePeriodStore = defineStore('period', () => {
-    const periodStartDate = ref( new Date() )
 
-    const toWidgetData = computed(() => {
-        const currMonth = periodStartDate.value.getMonth()
-        const currYear = periodStartDate.value.getFullYear()
-        const m = currMonth + 1
-        const month = (m < 10) ? `0${m}` : m
-        return `${currYear}-${month}`
+    const dateRange =  ref({ 
+        from: date.formatDate(defaultFrom, 'DD.MM.YYYY'), 
+        to: date.formatDate(defaultTo, 'DD.MM.YYYY'), 
     })
 
-    const toDateRange = computed(() => {
-        const currMonth = periodStartDate.value.getMonth()
-        const currYear = periodStartDate.value.getFullYear()
-        const startDate = new Date(currYear, currMonth)
-        const endDate = new Date(currYear, currMonth + 1)
-        return [ startDate, endDate ]
-    })
+    const toDate = computed(() => {
+        const val = dateRange.value
 
-    function setWidgetData(monthYear: string) {
-        periodStartDate.value = new Date(monthYear)
-    }
+        const from = (val?.from) ?  date.extractDate(val.from, 'DD.MM.YYYY') : new Date()
+        const to = (val?.to) ?  date.extractDate(val.to, 'DD.MM.YYYY') : new Date()
+       
+        return {
+            from, 
+            to,
+        }
+    })
 
     return {
-        toWidgetData, toDateRange, setWidgetData
+        toDate, dateRange
     }
 })
