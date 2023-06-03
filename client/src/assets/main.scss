@@ -1,13 +1,32 @@
-$primary   : #00bd7e;
+$primary : #00bd7e;
 $secondary : #00bd7e;
-$accent    : #00bd7e;
+$accent : #00bd7e;
 
-$dark      : #3e3d3d;
+$dark : #3e3d3d;
 
-$positive  : #00bd7e;
-$negative  : #ef0038;
-$info      : #31CCEC;
-$warning   : #ff9900;
+$positive : #00bd7e;
+$negative : #ef0038;
+$info : #31CCEC;
+$warning : #ff9900;
+
+*::-webkit-scrollbar {
+    width: 10px;
+    /* width of the entire scrollbar */
+}
+
+*::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    /* color of the tracking area */
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color:  $accent;
+    /* color of the scroll thumb */
+    border-radius: 20px;
+    /* roundness of the scroll thumb */
+    border: 3px solid #f5f5f5;
+    /* creates padding around scroll thumb */
+}
 
 a {
     color: $accent;
@@ -22,5 +41,3 @@ a {
 // @import 'quasar/src/css/index.scss';
 // Import Quasar css
 @import '../../node_modules/quasar/src/css/index.sass'
-
-

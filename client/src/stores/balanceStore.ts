@@ -23,12 +23,26 @@ export const useBalanceStore = defineStore('balance', () => {
     const process = computed(() => {
         const activeAccounts = accountStore.activeAccounts
         const operations = opetationStore.operationsInPeriod
+        const operationsBeforePeriod = opetationStore.operationsBeforePeriod
 
         const result = [] as IBalanceResult[] 
 
         for (const account of activeAccounts) {
             const operationsByAccountAndPeriod = account.operationsByAccount(operations)
-            const startVal = 0
+            const operationsByAccountAndBeforePeriod = account.operationsByAccount(operationsBeforePeriod)
+
+            let startVal = operationsByAccountAndBeforePeriod.reduce((acc, op) => {
+                if (op.creditAccount.id === account.id) {
+                    acc -= op.val
+                } else if (op.debitAccount.id === account.id) {
+                    acc += op.val
+                }   
+                return acc
+            }, 0)
+
+            if (!account.isAssetAccount) {
+                startVal *= -1
+            }
                 
             const curr = {
                 account: account,

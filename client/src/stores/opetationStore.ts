@@ -35,6 +35,14 @@ export const useOpetationStore = defineStore('operation', () => {
         })
     }
 
+    const operationsBeforePeriod = computed(() => {
+        const { from } = periodStore.toDate
+
+        return operationList.value
+            .filter(i => i.createdAt < from)
+            .sort((a,b) => (b.createdAt.getTime() - a.createdAt.getTime())) // desc sort
+    })
+
     const operationsInPeriod = computed(() => {
         const { from, to } = periodStore.toDate
 
@@ -48,6 +56,6 @@ export const useOpetationStore = defineStore('operation', () => {
         return operationList.value.find(i => i.id === id)
     }
 
-    return { operationsInPeriod, addOperation, getOperation, getOperations }
+    return { operationsInPeriod, addOperation, getOperation, getOperations, operationsBeforePeriod }
 })
 

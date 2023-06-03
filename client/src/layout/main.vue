@@ -1,6 +1,6 @@
 <template>
     <q-layout view="lHh Lpr lFf">
-        <q-drawer :mini="miniState" show-if-above side="left" behavior="desktop" elevated class="bg-primary no-scroll text-white">
+        <q-drawer :mini="miniState" show-if-above side="left" behavior="desktop" elevated class="bg-primary overflow-auto text-white">
             <header class="q-my-md">
                 <q-toolbar>
                     <q-btn flat dense round @click="toggleLeftDrawer" icon="menu" aria-label="Menu" />
@@ -12,7 +12,7 @@
 
             <q-separator color="white" />
            
-            <q-list class="q-mt-md">
+            <q-list class="q-mt-md" style="margin-bottom: 100px;">
                 <q-item clickable @click="openDateRangeDialog()" active-class="q-item-no-link-highlighting">
                     <q-item-section avatar>
                         <q-icon name="calendar_month" />
@@ -52,7 +52,7 @@
                 
             </q-list>
             
-            <div class="absolute-bottom bg-transparent">
+            <div class="absolute-bottom bg-primary">
                 <q-separator color="white" />
                 <div v-if="!miniState" class="row q-ma-lg">
                     <div class="col-8">
