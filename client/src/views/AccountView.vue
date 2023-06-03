@@ -67,7 +67,6 @@ import { defineComponent } from 'vue';
 import AccountOperation from '@/components/AccountOperation.vue';
 import ActiveOnlyCheckbox from '@/components/ActiveOnlyCheckbox.vue'
 import CreateAccount from '@/components/CreateAccount.vue';
-import Period from '@/components/Period.vue';
 import SelectedList from '@/components/SelectedList.vue';
 import { useAccountStore, useOpetationStore, useBalanceStore } from '@/stores';
 import { notify } from '@/services/Notify';
@@ -79,7 +78,6 @@ const balanceStore = useBalanceStore()
 export default defineComponent({
     components: {
         AccountOperation: AccountOperation,
-        Period: Period,
         SelectedList: SelectedList,
         ActiveOnlyCheckbox: ActiveOnlyCheckbox,
         CreateAccount

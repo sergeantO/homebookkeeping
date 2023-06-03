@@ -152,7 +152,6 @@
 </template>
 
 <script lang="ts">
-import Period from '@/components/Period.vue';
 import CreateAccount from '@/components/CreateAccount.vue';
 import ActiveOnlyCheckbox from '@/components/ActiveOnlyCheckbox.vue'
 import { Account, AccountTypeEnum } from '@/models';
@@ -165,7 +164,6 @@ const balanceStore = useBalanceStore()
 
 export default defineComponent({
     components: {
-        Period: Period,
         ActiveOnlyCheckbox: ActiveOnlyCheckbox,
         CreateAccount
     },

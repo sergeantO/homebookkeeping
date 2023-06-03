@@ -5,9 +5,6 @@
                 <h3 class="q-my-none">/Операции </h3>
             </div>
             <div></div>
-            <!-- <div class="col">
-            <Period />
-        </div> -->
         </div>
 
         <div class="row q-mb-md q-col-gutter-md">
@@ -45,19 +42,10 @@
 
 import Operation from '@/components/Operation.vue'
 import SelectedList from '@/components/SelectedList.vue';
-import Period from '@/components/Period.vue';
 import type { Account } from '@/models';
 import { defineComponent } from 'vue';
 import { useAccountStore, useOpetationStore } from '@/stores';
 import { notify } from '@/services/Notify';
-
-import { date } from 'quasar'
-
-const date1 = new Date(2017, 4, 12)
-const date2 = new Date(2017, 3, 8)
-const unit = 'days'
-
-const diff = date.getDateDiff(date1, date2, unit)
 
 const accountStore = useAccountStore()
 const opetationStore = useOpetationStore()
@@ -66,11 +54,9 @@ export default defineComponent({
     components: {
         Operation,
         SelectedList,
-        Period
     },
     data() {
         return {
-            period: null,
             debitAccountData: undefined as { label: string, value: number } | undefined,
             creditAccountData: undefined as { label: string, value: number } | undefined,
             name: '',
