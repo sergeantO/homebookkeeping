@@ -132,6 +132,7 @@ export default defineComponent({
         dateRange(newVal) {
             if (!newVal) return
             periodStore.dateRange = newVal
+            periodStore.save()
             opetationStore.getOperations()
         }
     },
