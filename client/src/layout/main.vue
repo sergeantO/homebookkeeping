@@ -130,9 +130,9 @@ export default defineComponent({
 
     watch: {
         dateRange(newVal) {
-            console.log(newVal)
             if (!newVal) return
             periodStore.dateRange = newVal
+            opetationStore.getOperations()
         }
     },
 

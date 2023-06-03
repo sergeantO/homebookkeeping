@@ -30,7 +30,8 @@ export const useOpetationStore = defineStore('operation', () => {
     }
 
     const getOperations = async () => {
-        const res = await Api.getOperations()
+        const { from, to } = periodStore.toDate
+        const res = await Api.getOperations(from.getTime(), to.getTime())
         res.data.forEach((op: any) => {
             const { id, name, creditAccountId, debitAccountId, value, createdAt } = op
             const findedOp = operationList.value.find((o) => o.id === id)

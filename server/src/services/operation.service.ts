@@ -77,20 +77,18 @@ const getOperationsBetween = (accountId: number, startDate: Date, endDate: Date)
     })
 }
 
-const getOperations = (date: Date) => {
-    const { startDate, endDate } = monthYear(date)
+const getOperations = (from: Date, to: Date) => {
     return prisma.operation.findMany({
         where: {
             createdAt: { 
-                gte: startDate,
-                lt: endDate
+                gte: from,
+                lt: to
             },
         }
     })
 }
 
-const queryOperations = (accountId: number, date: Date) => {
-    const { startDate, endDate } = monthYear(date)
+const queryOperations = (accountId: number, from: Date, to: Date) => {
     return prisma.operation.findMany({
         where: {
             AND: {
@@ -99,8 +97,8 @@ const queryOperations = (accountId: number, date: Date) => {
                     debitAccountId: { equals: accountId },
                 },
                 createdAt: { 
-                    gte: startDate,
-                    lt: endDate
+                    gte: from,
+                    lt: to
                 },
             }
             

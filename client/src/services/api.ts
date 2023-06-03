@@ -14,8 +14,8 @@ export class Api {
         return $http.delete(`/data/operations/${id}`)
     }
 
-    static getOperations() {
-        return $http.get('/data/operations')
+    static getOperations(from: number, to: number) {
+        return $http.get(`/data/operations?from=${from}&to=${to}`)
     }
 
     static getAccounts() {
