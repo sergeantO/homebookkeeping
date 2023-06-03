@@ -14,10 +14,18 @@ export const useOpetationStore = defineStore('operation', () => {
     function addOperation(name: string, val: number, creditAccount: Account, debitAccount: Account){
         return Api.createOperation(name, val, creditAccount.id, debitAccount.id)
             .then((res) => {
-                const { id, name, creditAccountId, debitAccountId, value, createdAt } = res.data
+                const { id, name, value, createdAt } = res.data
                 const op = new Operation( id, name, value, creditAccount, debitAccount, new Date(createdAt) )
                 operationList.value.push(op)
                 return op
+            })
+    }
+
+    const remove = async (id: number) => {
+        return Api.deletetOperation(id)
+            .then((res) => {
+                console.log(res)
+                operationList.value = operationList.value.filter(op => op.id !== id)
             })
     }
 
@@ -56,6 +64,6 @@ export const useOpetationStore = defineStore('operation', () => {
         return operationList.value.find(i => i.id === id)
     }
 
-    return { operationsInPeriod, addOperation, getOperation, getOperations, operationsBeforePeriod }
+    return { operationsInPeriod, addOperation, getOperation, getOperations, operationsBeforePeriod, remove }
 })
 

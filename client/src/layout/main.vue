@@ -1,6 +1,6 @@
 <template>
     <q-layout view="lHh Lpr lFf">
-        <q-drawer :mini="miniState" show-if-above side="left" behavior="desktop" elevated class="bg-primary overflow-auto text-white">
+        <q-drawer :mini="miniState" show-if-above side="left" behavior="desktop" elevated class="bg-primary no-scroll text-white">
             <header class="q-my-md">
                 <q-toolbar>
                     <q-btn flat dense round @click="toggleLeftDrawer" icon="menu" aria-label="Menu" />
@@ -11,8 +11,9 @@
             </header> 
 
             <q-separator color="white" />
-           
-            <q-list class="q-mt-md" style="margin-bottom: 100px;">
+
+            <q-scroll-area style="height: calc(100vh - 200px);">
+                <q-list class="q-mt-md">
                 <q-item clickable @click="openDateRangeDialog()" active-class="q-item-no-link-highlighting">
                     <q-item-section avatar>
                         <q-icon name="calendar_month" />
@@ -51,10 +52,13 @@
                 </q-expansion-item>
                 
             </q-list>
+            </q-scroll-area>
+           
+           
             
             <div class="absolute-bottom bg-primary">
                 <q-separator color="white" />
-                <div v-if="!miniState" class="row q-ma-lg">
+                <div v-if="!miniState" class="row q-pa-lg">
                     <div class="col-8">
                         <div class="text-weight-bold">{{ user.name }}</div>
                         <div> {{ user.email  }}</div>
@@ -185,6 +189,9 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="scss">
+.vertical-scroll {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+}
 </style>

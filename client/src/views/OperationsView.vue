@@ -10,6 +10,14 @@
         </div> -->
         </div>
 
+        <div class="row q-mb-md q-col-gutter-md">
+            <div class="col-12 col-md-5"><q-input filled bg-color="white"  label="Содержание опреации"  v-model="name"  /></div>
+            <div class="col-6 col-md-2"><q-select filled bg-color="white" label="Дебетовый счет"  v-model="debitAccountData"  :options="accounts" /></div>
+            <div class="col-6 col-md-2"><q-select filled bg-color="white" label="Кредитовый счет"  v-model="creditAccountData" :options="accounts" /></div>
+            <div class="col-6 col-md-2"><q-input filled bg-color="white" label="Сумма"  type="number" v-model.number="val" /></div>
+            <div class="col-6 col-md-1"><q-btn  :disabled="isDisabledAddButton" @mouseup="addOperation"  color="primary" icon="add" /> </div>
+        </div>
+
         <div class="row">
             <div class="col-12">
 
@@ -17,21 +25,14 @@
                     <thead>
                         <th>#</th>
                         <th>содержание опреации</th>
-                        <th>Дебет</th>
-                        <th>кредит</th>
-                        <th style="width: 15%;">сумма</th>
+                        <th>Дебетовый счет</th>
+                        <th>Кредитовый счет</th>
+                        <th>сумма</th>
                         <th>дата</th>
+                        <th></th>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>#</td>
-                            <td><q-input outlined v-model="name" :dense="true" /></td>
-                            <td><q-select outlined v-model="debitAccountData" :options="accounts" /></td>
-                            <td><q-select outlined v-model="creditAccountData" :options="accounts" /></td>
-                            <td><q-input outlined type="number" v-model.number="val" :dense="true" /></td>
-                            <td> <q-btn  :disabled="isDisabledAddButton" @mouseup="addOperation" round outline size="sm" color="primary" icon="done" /></td>
-                        </tr>
-                        <Operation v-for="op in operations" key="op.id" :operation="op" />
+                        <Operation v-for="op in operations" key="op.id" :operation="op" @remove="remove" />
                     </tbody>
                 </q-markup-table>
 
@@ -50,6 +51,14 @@ import { defineComponent } from 'vue';
 import { useAccountStore, useOpetationStore } from '@/stores';
 import { notify } from '@/services/Notify';
 
+import { date } from 'quasar'
+
+const date1 = new Date(2017, 4, 12)
+const date2 = new Date(2017, 3, 8)
+const unit = 'days'
+
+const diff = date.getDateDiff(date1, date2, unit)
+
 const accountStore = useAccountStore()
 const opetationStore = useOpetationStore()
 
@@ -65,7 +74,7 @@ export default defineComponent({
             debitAccountData: undefined as { label: string, value: number } | undefined,
             creditAccountData: undefined as { label: string, value: number } | undefined,
             name: '',
-            val: 0,
+            val: undefined as number | undefined,
         }
     },
     computed: {
@@ -90,15 +99,19 @@ export default defineComponent({
             return !this.creditAccount
                 || !this.debitAccount
                 || this.creditAccount === this.debitAccount
+                || !this.val
                 || this.val < 1
                 || !this.name
         }
     },
     methods: {
+        remove(id: number) {
+            opetationStore.remove(id)
+        },
         addOperation() {
 
             if (!this.isDisabledAddButton) {
-                opetationStore.addOperation(this.name, this.val, this.creditAccount as Account, this.debitAccount as Account)
+                opetationStore.addOperation(this.name, this.val as number, this.creditAccount as Account, this.debitAccount as Account)
                     .then(() => {
                         notify.success('Операция успешно созданна')
                     })

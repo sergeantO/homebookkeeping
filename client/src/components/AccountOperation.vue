@@ -9,6 +9,7 @@
         <td>{{ debit }}</td>
         <td>{{ credit }}</td>
         <td>{{ dateFormat }}</td>
+        <td><q-btn v-if=" operation.isEditable" outline icon="delete" color="primary" size="sm" @click="remove(operation.id)"></q-btn></td>
     </tr>
 </template>
 
@@ -45,6 +46,11 @@ export default defineComponent({
         dateFormat() {
             const date = this.operation.createdAt as Date
             return date?.toLocaleDateString() || ''
+        },
+    },
+    methods: {
+        remove(id: number){
+            this.$emit('remove', id)
         }
     }
 })

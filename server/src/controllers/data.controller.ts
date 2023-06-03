@@ -33,6 +33,12 @@ const getOperations = catchAsync(async (req, res) => {
     res.send(operations);
 })
 
+const removeOperation = catchAsync(async(req,res) => {
+    const id = +req.params.operId
+    const operation = await operationService.removeById(id)
+    res.status(httpStatus.OK).send(operation);
+})
+
 const createOperation = catchAsync(async (req, res) => {
     const { name, value, debitAccount, creditAccount } = req.body
     const user = req.user as User
@@ -51,6 +57,7 @@ const createAccount = catchAsync(async (req, res) => {
 export default {
     getAccountsWithBalance: getAccounts,
     getOperations,
+    removeOperation,
     createOperation,
     createAccount
 }

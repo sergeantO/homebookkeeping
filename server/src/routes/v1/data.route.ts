@@ -12,6 +12,10 @@ router
   .get(auth(), dataController.getOperations);
 
 router
+  .route('/operations/:operId')
+  .delete(auth(), dataController.removeOperation)
+
+router
   .route('/accounts')
   .post(auth(), dataController.createAccount)
   .get(auth(), dataController.getAccountsWithBalance);

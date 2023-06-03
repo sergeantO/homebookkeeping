@@ -7,12 +7,14 @@
             <div>
                 <CreateAccount />
             </div>
-            <!-- <div class="col">
-                <ActiveOnlyCheckbox />
-            </div>
-            <div class="col">
-                <Period />
-            </div> -->
+        </div>
+
+        <div class="row q-mb-md q-col-gutter-md">
+            <div class="col-12 col-md-5"><q-input filled bg-color="white"  label="Содержание опреации"  v-model="name"  /></div>
+            <div class="col-6 col-md-2"><q-input filled bg-color="white" label="Дебет"  type="number" v-model.number="debit" /></div>
+            <div class="col-6 col-md-2"><q-input filled bg-color="white" label="Кредит"  type="number" v-model.number="credit" /></div>
+            <div class="col-6 col-md-2"><q-select filled bg-color="white" label="кор. счет"  v-model="secondAccount"  :options="allAccounts" /></div>
+            <div class="col-6 col-md-1"><q-btn @mouseup="addOperation"  color="primary" icon="add" /> </div>
         </div>
 
         <div class="row">
@@ -24,15 +26,9 @@
                         <th>Дебет</th>
                         <th>кредит</th>
                         <th>Дата</th>
+                        <th></th>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><q-input outlined v-model="name" :dense="true" /></td>
-                            <td><q-select outlined v-model="secondAccount" :options="allAccounts" :dense="true" /></td>
-                            <td><q-input outlined type="number" v-model.number="debit" class="w-100" :dense="true" /></td>
-                            <td><q-input outlined type="number" v-model.number="credit" class="w-100" :dense="true" /></td>
-                            <td><q-btn  @mouseup="addOperation" round outline size="sm" color="primary" icon="done" /></td>
-                        </tr>
 
                         <tr>
                             <th colspan="2">Начальный остаток</th>
@@ -40,7 +36,8 @@
                             <th>{{ (!acount.isAssetAccount) ? balance?.startVal : '' }}</th>
                         </tr>
                         
-                        <AccountOperation v-for="op in operations" :key="op.id" :operation="op" :account="acount" />
+                        <AccountOperation v-for="op in operations" :key="op.id" :operation="op" :account="acount" @remove="remove"  />
+
                         <tr>
                             <th colspan="2">Оборот</th>
                             <th>{{ totalDebit }}</th>
@@ -48,14 +45,15 @@
                         </tr>
                         <tr>
                             <th colspan="2">Итог</th>
-                            <th>{{ (acount.isAssetAccount) ? totalDebit - totalCredit : 0 }}</th>
-                            <th>{{ (acount.isAssetAccount) ? 0 : totalCredit - totalDebit }}</th>
+                            <th>{{ (acount.isAssetAccount) ? totalDebit - totalCredit : '' }}</th>
+                            <th>{{ (acount.isAssetAccount) ? '' : totalCredit - totalDebit }}</th>
                         </tr>
                         <tr>
                             <th colspan="2">Итоговый остаток</th>
-                            <th>{{ (acount.isAssetAccount) ? balance?.endVal : 0 }}</th>
-                            <th>{{ (acount.isAssetAccount) ? 0 : balance?.endVal }}</th>
+                            <th>{{ (acount.isAssetAccount) ? balance?.endVal : '' }}</th>
+                            <th>{{ (acount.isAssetAccount) ? '' : balance?.endVal }}</th>
                         </tr>
+                        
                     </tbody>
                 </q-markup-table>
 
@@ -140,6 +138,9 @@ export default defineComponent({
         },
     },
     methods: {
+        remove(id: number) {
+            opetationStore.remove(id)
+        },
         addOperation() {
             const secondAccountData = this.secondAccount as any
             if (!secondAccountData) return

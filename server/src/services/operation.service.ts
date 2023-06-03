@@ -52,6 +52,14 @@ const getOperationsAfterDate = (accountId: number, startDate: Date) => {
     })
 }
 
+const removeById = (id: number) => {
+    return prisma.operation.delete({
+        where: {
+          id: id,
+        },
+      })
+}
+
 const getOperationsBetween = (accountId: number, startDate: Date, endDate: Date) => {
     return prisma.operation.findMany({
         where: {
@@ -107,5 +115,6 @@ export default {
     getOperations,
     getOperationsBetween,
     getOperationsAfterDate,
-    getOperationsBeforeDate
+    getOperationsBeforeDate,
+    removeById,
 }

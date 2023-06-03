@@ -10,6 +10,10 @@ export class Api {
         return $http.post('/data/accounts', { name, type: AccountTypeEnum[type] })
     }
 
+    static deletetOperation(id: number) {
+        return $http.delete(`/data/operations/${id}`)
+    }
+
     static getOperations() {
         return $http.get('/data/operations')
     }
