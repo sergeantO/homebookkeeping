@@ -24,7 +24,6 @@ export const useOpetationStore = defineStore('operation', () => {
     const remove = async (id: number) => {
         return Api.deletetOperation(id)
             .then((res) => {
-                console.log(res)
                 operationList.value = operationList.value.filter(op => op.id !== id)
             })
     }

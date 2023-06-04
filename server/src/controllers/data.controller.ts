@@ -24,22 +24,12 @@ const getBalance = catchAsync(async(req,res) => {
 })
 
 const getOperations = catchAsync(async (req, res) => {
-
-    const from = new Date(+(req.query.from as string))
-    const to = new Date(+(req.query.to as string))
-
+    const filter = pick(req.query, ['from', 'to']);
+    const from = new Date(+(filter.from as string))
+    const to = new Date(+(filter.to as string))
     const user = req.user as User
 
-    console.log(from, to)
-    console.log(from, to)
-    console.log(from, to)
-    console.log(from, to)
-
-    // const filter = pick(req.query, ['monthYear']);
-    // const date = new Date()
-    // const accountId = 1
-    const operations = await operationService.getOperations(from, to)
-
+    const operations = await operationService.getOperations(from, to, user)
     res.send(operations);
 })
 
