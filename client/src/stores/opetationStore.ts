@@ -11,6 +11,10 @@ export const useOpetationStore = defineStore('operation', () => {
     const accountStore = useAccountStore()
     const periodStore = usePeriodStore()
 
+    const clear = () => {
+        operationList.value = []
+    }
+
     function addOperation(name: string, val: number, creditAccount: Account, debitAccount: Account){
         return Api.createOperation(name, val, creditAccount.id, debitAccount.id)
             .then((res) => {
@@ -64,6 +68,6 @@ export const useOpetationStore = defineStore('operation', () => {
         return operationList.value.find(i => i.id === id)
     }
 
-    return { operationsInPeriod, addOperation, getOperation, getOperations, operationsBeforePeriod, remove }
+    return { operationsInPeriod, addOperation, getOperation, getOperations, operationsBeforePeriod, remove, clear }
 })
 

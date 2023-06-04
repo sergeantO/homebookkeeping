@@ -180,6 +180,8 @@ export default defineComponent({
     methods: {
         logout() {
             userStore.logout().then(() => {
+                opetationStore.clear()
+                accountStore.clear()
                 this.$router.push('/login')
             })
         },

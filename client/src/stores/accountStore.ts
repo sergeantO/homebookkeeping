@@ -9,6 +9,10 @@ export const useAccountStore = defineStore('account', () => {
     const accountList = ref([] as Account[])
     const opetationStore = useOpetationStore()
 
+    const clear = () => {
+        accountList.value = []
+    }
+
     const addAccount = async(accountType: AccountTypeEnum, name: string) => {
         const res = await Api.createAccount(name, accountType)
         const { id, type } = res.data 
@@ -55,6 +59,6 @@ export const useAccountStore = defineStore('account', () => {
 
 
     return { 
-        isActiveOnly, activeAccounts, addAccount, getAccount, getAccounts
+        isActiveOnly, activeAccounts, addAccount, getAccount, getAccounts, clear
     }
 })

@@ -18,15 +18,15 @@ const isAssetAccount = (account: Account) => {
     return false
 }
 
-const queryAccounts = async (userId: number, closeAt: Date) => {
+const queryAccounts = async (userId: number) => {
     return await prisma.account.findMany({
-        // where: {
-        //     users: {
-        //         some: {
-        //             id: { equals: userId }
-        //         }
-        //     }
-        // },
+        where: {
+            users: {
+                some: {
+                    id: { equals: userId }
+                }
+            }
+        },
     })
 }
 

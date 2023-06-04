@@ -20,7 +20,7 @@ export class Account {
     }
 
     operationsByAccount(operationList: Operation[]) {
-        return operationList.filter(op => op.creditAccount.id === this.id || op.debitAccount.id === this.id)
+        return operationList.filter(op => op.creditAccount?.id === this.id || op.debitAccount?.id === this.id)
     }
 
     debit(operationList: Operation[]) {

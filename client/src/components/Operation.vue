@@ -3,10 +3,16 @@
         <td>{{ operation.id }}</td>
         <td>{{ operation.name }}</td>
         <td>
-            <RouterLink :to="{ name: 'account', params: { id: operation.debitAccount.id }}">{{ operation.debitAccount.name }}</RouterLink>
+            <span v-if="operation.debitAccount?.id">
+                <RouterLink :to="{ name: 'account', params: { id: operation.debitAccount.id || 0 }}">{{ operation.debitAccount.name }}</RouterLink>
+            </span>
+           <span v-else>[forein bill]</span>
         </td>
         <td>
-            <RouterLink :to="{ name: 'account', params: { id: operation.creditAccount.id }}">{{ operation.creditAccount.name }}</RouterLink>
+            <span v-if="operation.creditAccount?.id">
+                <RouterLink :to="{ name: 'account', params: { id: operation.creditAccount.id || 0 }}">{{ operation.creditAccount.name }}</RouterLink>
+            </span>
+            <span v-else>[forein bill]</span>
         </td>
         <td>{{ operation.val }}</td>
         <td>{{ dateFormat }}</td>

@@ -12,15 +12,10 @@ const getAccounts = catchAsync(async (req, res) => {
     
     const user = req.user as User
     const userId = user.id
-    const closeAt = new Date()
     
-    const accounts = await accountService.queryAccounts(userId, closeAt)
+    const accounts = await accountService.queryAccounts(userId)
     
     res.send(accounts);
-})
-
-const getBalance = catchAsync(async(req,res) => {
-    
 })
 
 const getOperations = catchAsync(async (req, res) => {
