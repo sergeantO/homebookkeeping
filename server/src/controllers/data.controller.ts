@@ -12,7 +12,6 @@ const getAccounts = catchAsync(async (req, res) => {
     
     const user = req.user as User
     const userId = user.id
-
     const closeAt = new Date()
     
     const accounts = await accountService.queryAccounts(userId, closeAt)
@@ -28,6 +27,8 @@ const getOperations = catchAsync(async (req, res) => {
 
     const from = new Date(+(req.query.from as string))
     const to = new Date(+(req.query.to as string))
+
+    const user = req.user as User
 
     console.log(from, to)
     console.log(from, to)
@@ -58,8 +59,9 @@ const createOperation = catchAsync(async (req, res) => {
 })
 
 const createAccount = catchAsync(async (req, res) => {
+    const user = req.user as User
     const { name, type } = req.body
-    const account = await accountService.createAccount(name, type)
+    const account = await accountService.createAccount(name, type, user)
     res.status(httpStatus.CREATED).send(account);
 })
 

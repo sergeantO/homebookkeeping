@@ -1,11 +1,12 @@
-import { Account, AccountType } from '@prisma/client';
+import { Account, AccountType, User } from '@prisma/client';
 import prisma from '../client';
 
-const createAccount = async (name: string, type: AccountType) => {
+const createAccount = async (name: string, type: AccountType, user: User) => {
     return prisma.account.create({
         data: {
             name,
             type,
+            users: { connect: [ { id: user.id } ] }
         }
     })
 }

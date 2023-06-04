@@ -8,6 +8,7 @@ yarn build
 
 cd ../server
 yarn
+yarn db:push
 yarn start
 
 sudo service nginx restart
