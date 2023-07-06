@@ -15,10 +15,28 @@ export interface IBalanceResult {
     endVal: number
 }
 
+export interface IRespBalance {
+    id: number
+    acountId: number
+    month: number
+    value: number
+    year: number
+}
+
 export const useBalanceStore = defineStore('balance', () => {
-    
+    const periodStore = usePeriodStore()
     const accountStore = useAccountStore()
     const opetationStore = useOpetationStore()
+    
+    const balanceResp = ref([] as IRespBalance[])
+
+    const fetchData = () => {
+        const { from } = periodStore.toDate
+        Api.getBalance( from.getTime() )
+        .then(({ data }) => {
+            balanceResp.value = data
+        })
+    }
 
     const process = computed(() => {
         const activeAccounts = accountStore.activeAccounts
@@ -31,14 +49,16 @@ export const useBalanceStore = defineStore('balance', () => {
             const operationsByAccountAndPeriod = account.operationsByAccount(operations)
             const operationsByAccountAndBeforePeriod = account.operationsByAccount(operationsBeforePeriod)
 
-            let startVal = operationsByAccountAndBeforePeriod.reduce((acc, op) => {
+            let startVal = balanceResp.value.find(rb => rb.acountId === account.id)?.value || 0
+            console.log(`startVal ${startVal}`)
+            startVal = operationsByAccountAndBeforePeriod.reduce((acc, op) => {
                 if (op.creditAccount.id === account.id) {
                     acc -= op.val
                 } else if (op.debitAccount.id === account.id) {
                     acc += op.val
                 }   
                 return acc
-            }, 0)
+            }, startVal)
 
             if (!account.isAssetAccount) {
                 startVal *= -1
@@ -60,7 +80,7 @@ export const useBalanceStore = defineStore('balance', () => {
     })
 
     return {
-        process,
+        process, fetchData, balanceResp
     }
 })
 

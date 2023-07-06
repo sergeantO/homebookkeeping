@@ -50,8 +50,11 @@ export const useOpetationStore = defineStore('operation', () => {
     const operationsBeforePeriod = computed(() => {
         const { from } = periodStore.toDate
 
+        const monthFirstDay = new Date(from.getFullYear(), from.getMonth(), 1, 0, 0, 0)
+
         return operationList.value
             .filter(i => i.createdAt < from)
+            .filter(i => i.createdAt >= monthFirstDay)
             .sort((a,b) => (b.createdAt.getTime() - a.createdAt.getTime())) // desc sort
     })
 

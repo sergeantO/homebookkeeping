@@ -174,13 +174,6 @@ export default defineComponent({
         }
     },
     methods: {
-        createAccount() {
-            const newAccountType = +this.newAccountType
-            const newAccountName = this.newAccountName
-            if (newAccountName.length > 0) {
-                accountStore.addAccount(newAccountType, newAccountName)
-            }
-        },
         total(balances: IBalanceResult[]) {
             return balances.reduce((acc, i) => {
                 acc.credit += i.credit

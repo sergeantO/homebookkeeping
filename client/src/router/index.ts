@@ -41,6 +41,12 @@ const router = createRouter({
           component: () => import('../views/OperationsView.vue'),
           beforeEnter: ifAuthenticated
         },
+        {
+          path: '/close',
+          name: 'close',
+          component: () => import('../views/CloseView.vue'),
+          beforeEnter: ifAuthenticated
+        },
       ]
     },
     {

@@ -1,18 +1,17 @@
-import express from 'express';
-import helmet from 'helmet';
 import compression from 'compression';
 import cors from 'cors';
-import passport from 'passport';
+import express from 'express';
+import helmet from 'helmet';
 import httpStatus from 'http-status';
+import passport from 'passport';
 import config from './config/config';
 import morgan from './config/morgan';
-import xss from './middlewares/xss';
 import { jwtStrategy } from './config/passport';
-import { authLimiter } from './middlewares/rateLimiter';
-import routes from './routes/v1';
 import { errorConverter, errorHandler } from './middlewares/error';
+import { authLimiter } from './middlewares/rateLimiter';
+import xss from './middlewares/xss';
+import routes from './routes/v1';
 import ApiError from './utils/ApiError';
-import path from 'path';
 
 const app = express();
 
@@ -20,12 +19,6 @@ if (config.env !== 'test') {
   app.use(morgan.successHandler);
   app.use(morgan.errorHandler);
 }
-
-// const distPath = (config.env === 'production') 
-//    ? path.resolve(__dirname, '..', '..', '..', 'client', 'dist')
-//    : path.resolve(__dirname, '..', '..', 'client', 'dist')
-    
-// app.use(express.static(distPath));
 
 // set security HTTP headers
 app.use(helmet());

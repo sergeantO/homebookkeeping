@@ -13,11 +13,11 @@ export const useAccountStore = defineStore('account', () => {
         accountList.value = []
     }
 
-    const addAccount = async(accountType: AccountTypeEnum, name: string) => {
-        const res = await Api.createAccount(name, accountType)
+    const addAccount = async(accountType: AccountTypeEnum, name: string, isClosable: boolean) => {
+        const res = await Api.createAccount(name, accountType, isClosable)
         const { id, type } = res.data 
         const st = String(type) as keyof typeof AccountType
-        const ac = new Account(id, AccountType[st], name)
+        const ac = new Account(id, AccountType[st], name, isClosable)
         accountList.value.push(ac)
         return ac
     }
@@ -25,11 +25,11 @@ export const useAccountStore = defineStore('account', () => {
     const getAccounts = async () => {
         const res = await Api.getAccounts()
         res.data.forEach((ac: any) => {
-            const { id, type, name } = ac 
+            const { id, type, name, isClosable } = ac 
             const findedAcc = accountList.value.find((acc) => acc.id === id)
             if (!findedAcc) {
                 const st = String(type) as keyof typeof AccountType
-                const account = new Account(id, AccountType[st], name)
+                const account = new Account(id, AccountType[st], name, isClosable)
                 accountList.value.push(account)
             }
         })

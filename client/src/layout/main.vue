@@ -98,7 +98,7 @@
 
 <script lang="ts">
 import { userInfo } from '@/services/userInfo'
-import { useAccountStore, useOpetationStore, usePeriodStore } from '@/stores'
+import { useAccountStore, useBalanceStore, useOpetationStore, usePeriodStore } from '@/stores'
 import { useUserStore } from '@/stores/userStore'
 import { useQuasar, useDialogPluginComponent } from 'quasar'
 import { defineComponent, ref } from 'vue'
@@ -111,8 +111,10 @@ const periodStore = usePeriodStore()
 const userStore = useUserStore()
 const accountStore = useAccountStore()
 const opetationStore = useOpetationStore()
+const balanceStore = useBalanceStore()
 accountStore.getAccounts().then(() => {
     opetationStore.getOperations()
+    balanceStore.fetchData()
 })
 
 export default defineComponent({

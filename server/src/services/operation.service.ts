@@ -1,4 +1,4 @@
-import { Prisma, User } from '@prisma/client';
+import { Operation, Prisma, PrismaPromise, User } from '@prisma/client';
 import prisma from '../client';
 import moment from 'moment';
 
@@ -7,7 +7,8 @@ const createOperation = (
     value: number, 
     debitAccountId: number,
     creditAccountId: number,
-    userId: number
+    userId: number,
+    createdAt?: Date
 ) => {
     return prisma.operation.create({
         data: {
@@ -15,7 +16,8 @@ const createOperation = (
             value,
             debitAccountId,
             creditAccountId,
-            userId
+            userId,
+            createdAt,
         }
     })
 }
@@ -65,7 +67,7 @@ const getOperations = (from: Date, to: Date, user: User) => {
     const formatedTo =  moment(to).format('YYYY-MM-DD')
 
     const sql = Prisma.sql `
-        SELECT op.id, op.name, op.value, op.createdAt, op.creditAccountId, op.debitAccountId
+        SELECT DISTINCT op.id, op.name, op.value, op.createdAt, op.creditAccountId, op.debitAccountId
         FROM Operation as op
         LEFT JOIN Account as acc
         ON acc.id = op.creditAccountId
@@ -79,7 +81,7 @@ const getOperations = (from: Date, to: Date, user: User) => {
         ORDER BY op.createdAt DESC;
     `
 
-    return prisma.$queryRaw(sql)
+    return prisma.$queryRaw(sql) as PrismaPromise<Operation[]>
 }
 
 export default {

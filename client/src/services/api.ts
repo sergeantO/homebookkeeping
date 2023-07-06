@@ -6,8 +6,8 @@ export class Api {
         return $http.post('/data/operations', { name, value, creditAccount, debitAccount })
     }
 
-    static createAccount(name: string, type: AccountTypeEnum) {
-        return $http.post('/data/accounts', { name, type: AccountTypeEnum[type] })
+    static createAccount(name: string, type: AccountTypeEnum, isClosable: boolean) {
+        return $http.post('/data/accounts', { name, type: AccountTypeEnum[type], isClosable })
     }
 
     static deletetOperation(id: number) {
@@ -20,5 +20,16 @@ export class Api {
 
     static getAccounts() {
         return $http.get('/data/accounts')
+    }
+
+    static getBalance(from: number) {
+        return $http.get(`/data/balances?from=${from}`)
+    }
+
+    static closePeriod(targetAccount?: number) {
+        if (!targetAccount) {
+            return
+        }
+        return $http.post('/data/balances', { targetAccount })
     }
 }

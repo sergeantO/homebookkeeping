@@ -9,7 +9,7 @@ export enum AccountType {
 
 export class Account {
     
-    constructor(public id: number, public type: AccountType, public name: string) {
+    constructor(public id: number, public type: AccountType, public name: string, public isClosable: boolean) {
     }
 
     get isAssetAccount(): boolean {

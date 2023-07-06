@@ -1,8 +1,6 @@
 import express from 'express';
-import auth from '../../middlewares/auth';
-import validate from '../../middlewares/validate';
-import { userValidation } from '../../validations';
 import { dataController } from '../../controllers';
+import auth from '../../middlewares/auth';
 
 const router = express.Router();
 
@@ -18,6 +16,11 @@ router
 router
   .route('/accounts')
   .post(auth(), dataController.createAccount)
-  .get(auth(), dataController.getAccountsWithBalance);
+  .get(auth(), dataController.getAccounts);
+
+router
+  .route('/balances')
+  .post(auth(), dataController.closePeriod)
+  .get(auth(), dataController.getBalances)
 
 export default router;

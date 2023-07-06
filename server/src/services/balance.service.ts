@@ -1,89 +1,151 @@
-import { Prisma, Balance } from '@prisma/client';
+import { Account, Operation, Prisma, User } from '@prisma/client';
+import { operationService } from '.';
 import prisma from '../client';
-import monthYear from '../utils/monthYear';
-import { accountService, operationService } from '.';
-import ApiError from '../utils/ApiError';
-import httpStatus from 'http-status';
 
-const getBalance = async (accountId: number, date: Date) => {
-    const account = await accountService.getAccountById(accountId)
-    if (!account) {
-        throw new ApiError(httpStatus.BAD_REQUEST, 'account not found');
-    }
+const getBalances = async (beforeDate: Date, user: User) => {
+    
+    // начало и конец периода
+    const endDate = new Date(beforeDate)  // current date
+    endDate.setDate(1)                    // going to 1st of the month
+    endDate.setHours(0)
+    endDate.setMinutes(0)
+    endDate.setSeconds(-1)                 // going to last hour before this date even started.
+    const year = endDate.getFullYear()
+    const month = endDate.getMonth()
 
-    let lastBalance = await prisma.balance.findFirst({
+    return prisma.balanceHistory.findMany({
         where: {
-            acountId: {
-                equals: accountId,
+            year,
+            month,
+            account: {
+                users: {
+                    some: {
+                        id: { equals: user.id }
+                    }
+                }
             }
-        },
-        orderBy: {
-            deadDateTime: 'desc'
         }
     })
 
-    // если не найден ни один баланс - создаем
-    if (!lastBalance) {
-        lastBalance = await createBalance(accountId, 0)
-    } 
-    
-    // если найденый баланс не актуален - создаем новый
-    const { endDate } = monthYear(date)
-    if (lastBalance.deadDateTime < endDate) {
-        lastBalance = await createBalance(accountId, lastBalance.endValue)
-    }
-
-    // проверяем актуальность баланса
-    const lastOperations = await operationService.getOperationsAfterDate(accountId, lastBalance.updatedAt)
-    if (lastOperations.length < 1) {
-        return lastBalance
-    }
-
-    // актуализируем данные в балансе
-    const result = lastOperations.reduce((acc, op) => {
-        if (op.creditAccountId === accountId) {
-            acc.credit += op.value
-        }
-        if (op.debitAccountId === accountId) {
-            acc.debit += op.value
-        }
-        return acc
-    }, { debit: 0, credit: 0 })
-
-    const delta = (accountService.isAssetAccount(account)) 
-        ? result.debit - result.credit
-        : result.credit - result.debit
-
-    const updatedBalance = await prisma.balance.update({
-        where: { id: lastBalance.id },
-        data: {
-            credit: lastBalance.credit + result.credit,
-            debet: lastBalance.debet + result.debit,
-            result: delta,
-            endValue: lastBalance.startValue + delta
-        }
-    })
-    
-    return updatedBalance
 }
 
-const createBalance = async (acountId: number, startValue: number) => {
-    const { startDate, endDate } = monthYear(new Date())
-    return prisma.balance.create({
-        data: {
-            acountId,
-            createdAt: startDate,
-            deadDateTime: endDate,
-            startValue,
-            endValue: startValue,
-            credit: 0,
-            debet: 0,
-            result: 0
+const closePeriod = async () => {
+
+    // определяем даты начала и конеца отчетного периода
+    const d = new Date();   // current date
+    const currYear = d.getFullYear()
+    const currMonth = d.getMonth()
+    const startDate = new Date(currYear, currMonth - 1, 1, 0, 0, 0)
+    const endDate = new Date(currYear, currMonth, 1, 0, 0, 0) 
+
+    // находим все счета
+    const allAccounts = await prisma.account.findMany({
+        where: { 
+            isUserProfit: false
+        },
+        include: { users: { include: { user: true } } }
+    })
+
+    // находим все операции за прошлый месяц
+    const operationListInPeriod = await prisma.operation.findMany({
+        where: {
+            createdAt:  {
+                gte: startDate,
+                lt: endDate,
+            }
         }
     })
+
+    // на основе операций расчитываем итоги за месяц по счетам
+    const deltas = operationListInPeriod.reduce((acc, op) => {
+        const creditAcc = acc.get(op.creditAccountId) || 0
+        const debitAcc = acc.get(op.debitAccountId) || 0
+
+        acc.set(op.creditAccountId, creditAcc - op.value)
+        acc.set(op.debitAccountId, debitAcc + op.value)
+
+        return acc
+    }, new Map<number, number>())
+
+    // находим счет прибыли/убытки для каждого пользователя
+    const profitAccounts = allAccounts
+        .filter(i => i.isUserProfit)
+        .reduce((acc, account) => {
+            const ownerId = account.users.find(i => i.userIsOwner)?.userId
+            if (ownerId) {
+                acc.set(ownerId, account.id)
+            }
+            return acc
+        }, new Map<number, number>)
+
+    /* для всех закрываемых счетов создаем списания в профитный счет владельца счета, 
+     * его итог за месяц становится 0
+     */
+    const closeOperationList: Prisma.Prisma__OperationClient<Operation, never>[] = []
+    // закрываем счета 
+    allAccounts
+        .filter(i => i.isClosable)
+        .forEach((closableAccount) => {
+            const ownerId = closableAccount.users.find(i => i.userIsOwner)?.userId
+            if (ownerId) {
+                const targetAccountId = profitAccounts.get(ownerId)
+                const value = deltas.get(closableAccount.id)
+                if (targetAccountId && value) {
+                    const op = operationService.createOperation('закрытие счета', value,  targetAccountId, closableAccount.id, ownerId, endDate)
+                    closeOperationList.push(op)
+                    deltas.set(closableAccount.id, 0)
+                }
+            }
+        
+    })
+    
+    // находим последний баланс для каждого счета
+    const prevDate = new Date(currYear, currMonth - 2, 1, 0, 0, 0)
+    const prevYear = prevDate.getFullYear()
+    const prevMonth = prevDate.getMonth()
+    const history = await prisma.balanceHistory.findMany({
+        where: {
+            year: prevYear,
+            month: prevMonth,
+        }
+    })
+
+    const prevValues = new Map<number, number>()
+    history.forEach((hb) => {
+        prevValues.set(hb.acountId, hb.value)
+    })
+
+    // Считаем остатки
+    // создаем балансовую запись для каждого счета на текущий месяц
+    // создаем новые балансы
+    const balancePromiseList = allAccounts.map((ac) => {
+        const prevVal = prevValues.get(ac.id) || 0
+        let delta = deltas.get( ac.id ) || 0
+        if (ac.type === 'DEBT' || ac.type === 'OWN_CAPITAL') {
+            delta *= -1
+        }
+        const value = prevVal + delta
+
+        return prisma.balanceHistory.create({
+            data: {
+                year: currYear,
+                month: currMonth,
+                acountId: ac.id,
+                prevValue: prevVal,
+                monthDelta: delta,
+                value: value
+            }
+        })
+    })
+
+   const operationList = await Promise.all(closeOperationList)
+   const balanceList   = await Promise.all(balancePromiseList)
+
+   return { operationList, balanceList }
+
 }
 
 export default {
-    createBalance,
-    getBalance,
+    closePeriod,
+    getBalances,
 };

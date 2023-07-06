@@ -1,11 +1,44 @@
-import { Account, AccountType, User } from '@prisma/client';
+import { Account, AccountType, Operation, Prisma, User } from '@prisma/client';
 import prisma from '../client';
+import operationService from './operation.service';
 
-const createAccount = async (name: string, type: AccountType, user: User) => {
+const createAccount = async (name: string, type: AccountType, user: User, isClosable?: boolean) => {
     return prisma.account.create({
         data: {
             name,
             type,
+            isClosable,
+            users: { 
+                create: {
+                    userId: user.id,
+                    userIsOwner: true,
+                }
+            }
+        }
+    })
+}
+
+const shareAccount = async (accountId: number, userId: number) => {
+    return prisma.account.update({
+        where: {
+            id: accountId,
+        },
+        data: {
+            users: {
+                create: {
+                    userId: accountId
+                }
+            }
+        }
+    })
+}
+
+const createProfitAccount = async (user: User) => {
+    return prisma.account.create({
+        data: {
+            name: 'Прибыли и убытки',
+            type: AccountType.OWN_CAPITAL,
+            isUserProfit: true,
             users: { connect: [ { id: user.id } ] }
         }
     })
@@ -41,4 +74,6 @@ export default {
     queryAccounts,
     createAccount,
     isAssetAccount,
+    createProfitAccount,
+    shareAccount,
 };

@@ -1,20 +1,16 @@
-import httpStatus from 'http-status';
-import catchAsync from '../utils/catchAsync';
-import { authService, userService, tokenService, emailService, accountService, balanceService, operationService } from '../services';
-import exclude from '../utils/exclude';
-import { Balance, Operation, Account } from '@prisma/client';
-import pick from '../utils/pick';
 import { User } from '@prisma/client';
+import httpStatus from 'http-status';
+import { accountService, balanceService, operationService } from '../services';
+import catchAsync from '../utils/catchAsync';
+import pick from '../utils/pick';
 
 const getAccounts = catchAsync(async (req, res) => {
     const filter = pick(req.query, ['monthYear']);
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
-    
     const user = req.user as User
     const userId = user.id
     
     const accounts = await accountService.queryAccounts(userId)
-    
     res.send(accounts);
 })
 
@@ -26,6 +22,15 @@ const getOperations = catchAsync(async (req, res) => {
 
     const operations = await operationService.getOperations(from, to, user)
     res.send(operations);
+})
+
+const getBalances = catchAsync(async (req, res) => {
+    const user = req.user as User
+    const filter = pick(req.query, ['from', 'to']);
+    const from = new Date(+(filter.from as string))
+    
+    const balances = await balanceService.getBalances(from, user)
+    res.send(balances);
 })
 
 const removeOperation = catchAsync(async(req,res) => {
@@ -45,15 +50,24 @@ const createOperation = catchAsync(async (req, res) => {
 
 const createAccount = catchAsync(async (req, res) => {
     const user = req.user as User
-    const { name, type } = req.body
-    const account = await accountService.createAccount(name, type, user)
+    const { name, type, isClosable } = req.body
+    const account = await accountService.createAccount(name, type, user, isClosable)
     res.status(httpStatus.CREATED).send(account);
 })
 
+const closePeriod = catchAsync(async (req, res) => {
+    const user = req.user as User
+    const { targetAccount } = req.body
+    const balance = await balanceService.closePeriod(targetAccount, user)
+    res.status(httpStatus.CREATED).send(balance);
+})
+
 export default {
-    getAccountsWithBalance: getAccounts,
+    getAccounts,
     getOperations,
     removeOperation,
     createOperation,
-    createAccount
+    createAccount,
+    closePeriod,
+    getBalances,
 }

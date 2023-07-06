@@ -35,11 +35,12 @@ import { defineComponent } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import { RouterLink } from 'vue-router';
 import { notify } from '@/services/Notify';
-import { useAccountStore, useOpetationStore } from '@/stores';
+import { useAccountStore, useBalanceStore, useOpetationStore } from '@/stores';
 
 const userStore = useUserStore()
 const accountStore = useAccountStore()
 const opetationStore = useOpetationStore()
+const balanceStore = useBalanceStore()
 
 export default defineComponent({
     data() {
@@ -59,6 +60,7 @@ export default defineComponent({
                 .then(() => {
                     accountStore.getAccounts().then(() => {
                         opetationStore.getOperations()
+                        balanceStore.fetchData()
                     })
                     this.$router.replace('balance')
                 })

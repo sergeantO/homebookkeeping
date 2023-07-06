@@ -10,6 +10,7 @@
             <q-card-section class="q-pt-none">
                 <q-input outlined v-model="newAccountName" label="Название счета" class="q-mb-lg" />
                 <q-select outlined v-model="newAccountType" :options="options" label="Тип счета" />
+                <q-toggle v-if="newAccountType === 'Оборотные активы'" v-model="isClosable" label="Расходный счет" color="green" />
             </q-card-section>
 
             <!-- buttons example -->
@@ -34,6 +35,7 @@ export default defineComponent({
     data() {
         return {
             newAccountName: '',
+            isClosable: false,
             newAccountType: 'Оборотные активы',
             options: ['Оборотные активы', 'Внеоборотные активы', 'Долги', 'Собственный капитал']
         }
@@ -71,9 +73,10 @@ export default defineComponent({
 
             const newAccountType = this.options.findIndex((val) => val === this.newAccountType)
             const newAccountName = this.newAccountName
+            const isClosable = this.isClosable
             if (newAccountName.length > 0) {
                 this.newAccountName = ''
-                accountStore.addAccount(newAccountType, newAccountName)
+                accountStore.addAccount(newAccountType, newAccountName, isClosable)
                     .then(() => {
                         notify.success('Счет создан')
                     })
